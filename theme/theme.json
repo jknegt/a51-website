@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.5/theme.json",
+  "version": 2,
+  "settings": {
+    "color": {
+      "defaultPalette": false,
+      "palette": [
+        { "slug": "manila",       "name": "Manila",       "color": "#f5e6c8" },
+        { "slug": "concrete",     "name": "Concrete",     "color": "#8a8a8a" },
+        { "slug": "black",        "name": "Black",        "color": "#1a1a1a" },
+        { "slug": "white",        "name": "White",        "color": "#ffffff" },
+        { "slug": "neon-cyan",    "name": "UV Violet",     "color": "#BF5FFF" },
+        { "slug": "neon-magenta", "name": "Neon Magenta", "color": "#ff00ff" },
+        { "slug": "neon-green",   "name": "Neon Green",   "color": "#39ff14" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "monospace",
+          "name": "Monospace",
+          "fontFamily": "\"Courier New\", Courier, monospace"
+        }
+      ],
+      "fontSizes": [
+        { "slug": "small",   "name": "Small",   "size": "clamp(0.75rem, 2vw, 0.875rem)" },
+        { "slug": "medium",  "name": "Medium",  "size": "clamp(1rem, 3vw, 1.125rem)" },
+        { "slug": "large",   "name": "Large",   "size": "clamp(1.25rem, 4vw, 1.5rem)" },
+        { "slug": "x-large", "name": "X-Large", "size": "clamp(1.75rem, 5vw, 2.25rem)" }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        { "slug": "10", "name": "XS",  "size": "0.5rem" },
+        { "slug": "20", "name": "S",   "size": "1rem" },
+        { "slug": "30", "name": "M",   "size": "1.5rem" },
+        { "slug": "40", "name": "L",   "size": "2rem" },
+        { "slug": "50", "name": "XL",  "size": "3rem" },
+        { "slug": "60", "name": "2XL", "size": "4rem" }
+      ]
+    },
+    "layout": {
+      "contentSize": "1200px",
+      "wideSize": "1440px"
+    },
+    "custom": {
+      "silhouette-color": "#3a3a3a",
+      "card-width": "280px"
+    }
+  },
+  "styles": {
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--monospace)",
+      "fontSize": "var(--wp--preset--font-size--medium)"
+    },
+    "color": {
+      "background": "var(--wp--preset--color--black)",
+      "text": "var(--wp--preset--color--manila)"
+    },
+    "elements": {
+      "link": {
+        "color": {
+          "text": "var(--wp--preset--color--neon-cyan)"
+        },
+        "typography": {
+          "textDecoration": "none"
+        },
+        ":hover": {
+          "color": {
+            "text": "var(--wp--preset--color--manila)"
+          }
+        }
+      }
+    }
+  }
+}

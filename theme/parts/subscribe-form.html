@@ -1,0 +1,31 @@
+<!-- wp:group {"className":"area51-section area51-subscribe-section","tagName":"section"} -->
+<section class="wp-block-group area51-section area51-subscribe-section">
+    <!-- wp:heading {"level":2,"className":"area51-section-label"} -->
+    <h2 class="wp-block-heading area51-section-label">[CLASSIFIED] Request Subscription Access</h2>
+    <!-- /wp:heading -->
+
+    <!-- wp:html -->
+    <form id="area51-subscribe-form" class="area51-subscribe-form" novalidate>
+        <div class="area51-form-row">
+            <label for="area51-email-input" class="area51-label">Email Address</label>
+            <input
+                type="email"
+                id="area51-email-input"
+                class="area51-input"
+                name="email"
+                placeholder="operative@classified.gov"
+                autocomplete="email"
+                required
+            />
+        </div>
+        <div id="area51-subscribe-error" class="area51-form-error" style="display:none;" aria-live="polite"></div>
+        <button type="submit" id="area51-subscribe-btn" class="area51-btn area51-btn-primary">
+            SUBSCRIBE
+        </button>
+    </form>
+    <div id="area51-subscribe-success" class="area51-subscribe-success" style="display:none;" aria-live="polite">
+        <p>Your clearance request has been filed. Confirmation incoming.</p>
+    </div>
+    <!-- /wp:html -->
+</section>
+<!-- /wp:group -->

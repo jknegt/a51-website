@@ -1,0 +1,31 @@
+<!-- wp:html -->
+<form id="area51-clearance-form" class="area51-clearance-form" novalidate>
+    <p>
+        <label for="clearance-name">Full Name <span aria-hidden="true">*</span></label>
+        <input type="text" id="clearance-name" name="name" required placeholder="Your name" autocomplete="name">
+    </p>
+    <p>
+        <label for="clearance-email">Email Address <span aria-hidden="true">*</span></label>
+        <input type="email" id="clearance-email" name="email" required placeholder="your@email.com" autocomplete="email">
+    </p>
+    <p>
+        <label for="clearance-alias">Alias / Codename</label>
+        <input type="text" id="clearance-alias" name="alias" placeholder="Your Area 51 alias (if known)">
+    </p>
+    <p>
+        <label>Were you there? <span aria-hidden="true">*</span></label>
+        <span class="area51-radio-group">
+            <label><input type="radio" name="were_you_there" value="1" required> Yes</label>
+            <label><input type="radio" name="were_you_there" value="0"> No (but I have information)</label>
+        </span>
+    </p>
+    <p>
+        <label for="clearance-proof">Proof / Supporting Information (optional)</label>
+        <textarea id="clearance-proof" name="proof_notes" rows="5" placeholder="Describe your connection, a memory, or any identifying information..."></textarea>
+    </p>
+    <p>
+        <button type="submit" class="area51-btn">SUBMIT REQUEST</button>
+    </p>
+    <div id="area51-clearance-feedback" class="area51-form-feedback" aria-live="polite" hidden></div>
+</form>
+<!-- /wp:html -->

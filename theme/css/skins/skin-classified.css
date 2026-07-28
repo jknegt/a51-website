@@ -1,0 +1,8 @@
+/* [Layer 11] skin-classified.css — convention stub, intentionally a no-op.
+   The Classified Document skin is NOT scoped under body.skin-classified;
+   it is this theme's own unscoped baseline in area51-components.css and
+   remains the actual style source for the default look.
+   This file exists only to establish the theme/css/skins/ directory and
+   file-naming convention that Layer 12's additional skins will follow.
+   Do not add rules here — if the default look ever needs to change,
+   change area51-components.css directly, not this file. */

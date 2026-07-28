@@ -1,0 +1,89 @@
+/* [Redesign 2026-07-27] skin-rave.css — "Deep Transmission"
+   No longer a distinct color skin. All typography, layout, and color come
+   from the unscoped Classified baseline in area51-components.css, untouched.
+   This file adds exactly one graphic identity: a cyan-tinted rendering of
+   the anglerfish illustration (assets/images/Deep Sea Fish Clean.jpg), used
+   as a low, glowing watermark plus a pure-CSS pulsing "signal light" behind
+   the homepage call-to-action. Everything below is scoped under
+   body.skin-rave so it can never affect the default look. */
+
+/* --- Sitewide: small mark in the footer corner, present on every page --- */
+body.skin-rave .area51-footer {
+    position: relative;
+    overflow: hidden;
+}
+
+body.skin-rave .area51-footer::before {
+    content: "";
+    position: absolute;
+    bottom: 4px;
+    left: 24px;
+    width: 84px;
+    height: 84px;
+    background-image: url("../../images/skins/fish-mark-cyan.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.26;
+    pointer-events: none;
+    z-index: 0;
+    animation: area51-fish-bob 6s ease-in-out infinite;
+}
+
+/* --- Homepage only: large watermark behind the hero content --- */
+body.skin-rave.home .area51-main {
+    position: relative;
+    overflow: hidden;
+}
+
+body.skin-rave.home .area51-main::before {
+    content: "";
+    position: absolute;
+    bottom: -4%;
+    right: -6%;
+    width: min(460px, 58vw);
+    height: min(460px, 58vw);
+    background-image: url("../../images/skins/fish-mark-cyan.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.09;
+    pointer-events: none;
+    z-index: -1;
+    animation: area51-fish-bob 9s ease-in-out infinite;
+}
+
+/* --- Homepage only: pulsing "signal light" glow behind the CTA heading --- */
+body.skin-rave.home .area51-cta-section {
+    position: relative;
+}
+
+body.skin-rave.home .area51-cta-section::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 420px;
+    height: 420px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(45, 212, 255, 0.22) 0%, rgba(45, 212, 255, 0) 70%);
+    pointer-events: none;
+    z-index: -1;
+    animation: area51-signal-pulse 4s ease-in-out infinite;
+}
+
+@keyframes area51-fish-bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+}
+
+@keyframes area51-signal-pulse {
+    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+    50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.skin-rave .area51-footer::before,
+    body.skin-rave.home .area51-main::before,
+    body.skin-rave.home .area51-cta-section::before {
+        animation: none;
+    }
+}

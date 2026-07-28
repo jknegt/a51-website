@@ -1,0 +1,27 @@
+name: Build and Push to Harbor
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to Harbor
+        uses: docker/login-action@v3
+        with:
+          registry: harbor.lab.johndeedigital.ca
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: harbor.lab.johndeedigital.ca/library/a51-website:${{ github.ref_name }}

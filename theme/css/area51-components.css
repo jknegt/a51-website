@@ -1,0 +1,1604 @@
+/**
+ * Area 51 Reunion — Component-Level Styles
+ * Resolves ISSUE-005: CSS component-level styles for area51-* classes.
+ * Design tokens (colors, fonts) flow from theme.json; this file adds
+ * component-level rules (neon glow, styled inputs, button hover, card grid).
+ */
+
+/* ==========================================================================
+   0. Global Layout — header, nav, main container, sections, footer
+   ========================================================================== */
+
+/* --- Sitewide baseline --- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #1a1a1a;
+    color: #f5e6c8;
+    font-family: "Courier New", Courier, monospace;
+    margin: 0;
+}
+
+/* --- Header bar --- */
+.area51-header {
+    background-color: #0d0d0d;
+    border-bottom: 1px solid #BF5FFF;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(191, 95, 255, 0.15);
+}
+
+.admin-bar .area51-header {
+    top: 32px;
+}
+
+@media (max-width: 782px) {
+    .admin-bar .area51-header {
+        top: 46px;
+    }
+}
+
+/* ==========================================================================
+   Mobile navigation — hamburger, overlay, menu items
+   ========================================================================== */
+
+/* Hamburger button base */
+.wp-block-navigation__responsive-container-open {
+    color: #BF5FFF;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height: 36px;
+}
+
+/* Hide WP's 2-bar SVG */
+.wp-block-navigation__responsive-container-open svg {
+    display: none;
+}
+
+/* Replace with CSS 3-bar hamburger */
+.wp-block-navigation__responsive-container-open::before {
+    content: '';
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+    box-shadow:
+        0 7px 0 currentColor,
+        0 14px 0 currentColor;
+    flex-shrink: 0;
+}
+
+/* Close button (X inside the open menu) */
+.wp-block-navigation__responsive-container-close {
+    color: #BF5FFF;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.75rem;
+}
+
+/* Mobile overlay — dark background, light text */
+.wp-block-navigation__responsive-container.is-menu-open,
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-close,
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-dialog {
+    background-color: #0d0d0d !important;
+    color: #f5e6c8 !important;
+}
+
+/* Indent the entire nav content away from the right edge, clear the X close button */
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+    padding: 4rem 1.5rem 2rem 1.5rem !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+}
+
+/* Nav links inside mobile overlay */
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content,
+.wp-block-navigation__responsive-container.is-menu-open a {
+    color: #f5e6c8 !important;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    padding: 0.6rem 0 !important;
+    display: block;
+    text-align: left !important;
+}
+
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content:hover,
+.wp-block-navigation__responsive-container.is-menu-open a:hover {
+    color: #BF5FFF !important;
+}
+
+/* --- Site title --- */
+.area51-header .wp-block-site-title a,
+.area51-header .wp-block-site-title a:visited {
+    color: #BF5FFF;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-family: "Courier New", Courier, monospace;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    font-weight: bold;
+    text-shadow: 0 0 6px rgba(191, 95, 255, 0.5);
+}
+
+/* Force the site title's stored line break ("Area 51" / "30 Year Reunion")
+   to render as two lines on mobile; desktop ignores it (collapses to a
+   normal space) since white-space stays at its default there. */
+@media (max-width: 640px) {
+    .area51-header .wp-block-site-title a {
+        white-space: pre-line;
+    }
+}
+
+.area51-header .wp-block-site-title a:hover {
+    color: #f5e6c8;
+    text-shadow: none;
+}
+
+/* --- Navigation links --- */
+.area51-header .wp-block-navigation a,
+.area51-header .wp-block-navigation .wp-block-navigation-item__content {
+    color: #8a8a8a;
+    text-decoration: none;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.2s;
+}
+
+.area51-header .wp-block-navigation a:hover,
+.area51-header .wp-block-navigation .wp-block-navigation-item__content:hover {
+    color: #BF5FFF;
+}
+
+.area51-header .wp-block-navigation {
+    gap: 0.5rem;
+}
+
+/* --- Main content wrapper --- */
+.area51-main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 2rem 1rem;
+}
+
+@media (max-width: 640px) {
+    .area51-main {
+        padding: 2rem 1rem 0.5rem;
+    }
+}
+
+/* --- Generic section spacer --- */
+.area51-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.area51-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Homepage sections rendered via template-part blocks each end up as the
+   sole child of their own wrapper div, so :last-child above matches every
+   one of them individually and wrongly strips their spacing. Restore it. */
+.area51-section.area51-countdown-section,
+.area51-section.area51-counter-section,
+.area51-section.area51-subscribe-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+/* --- Section labels (small all-caps headings) --- */
+.area51-section-label {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #8a8a8a;
+    margin-bottom: 1.5rem;
+    font-weight: normal;
+}
+
+/* --- Board page container --- */
+.area51-board-section {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 3rem 2rem 1rem;
+}
+
+@media (max-width: 640px) {
+    .area51-board-section {
+        padding: 2rem 1rem 0.5rem;
+    }
+}
+
+/* --- Page title (wp:post-title rendered H1 at top of each page) --- */
+.area51-page-title {
+    font-family: "Courier New", Courier, monospace;
+    font-size: clamp(1.25rem, 4vw, 2rem);
+    text-transform: uppercase;
+    letter-spacing: clamp(0.06em, 1vw, 0.15em);
+    color: var(--wp--preset--color--manila, #f5e6c8);
+    font-weight: bold;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #2a2a2a;
+    overflow-wrap: break-word;
+}
+
+/* Music page title has extra top margin since it sits inside a plain div, not the section wrapper */
+.music-page-title {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+/* --- Global heading override — enforce monospace across all pages --- */
+h1, h2, h3, h4, h5, h6,
+.wp-block-heading {
+    font-family: "Courier New", Courier, monospace;
+    letter-spacing: 0.08em;
+    color: var(--wp--preset--color--manila, #f5e6c8);
+    font-weight: bold;
+}
+
+h1, .wp-block-heading.is-style-default:is(h1) {
+    font-size: clamp(1.25rem, 4vw, 2.25rem);
+    text-transform: uppercase;
+    letter-spacing: clamp(0.04em, 1vw, 0.12em);
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+h2 {
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+/* --- WP button block — override default pill/fill with our outline style --- */
+.wp-block-button__link,
+.wp-block-button__link:visited {
+    background-color: transparent !important;
+    color: var(--wp--preset--color--neon-cyan, #BF5FFF) !important;
+    border: 1px solid var(--wp--preset--color--neon-cyan, #BF5FFF) !important;
+    border-radius: 0 !important;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 0.6em 1.4em;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+    box-shadow: none;
+}
+
+.wp-block-button__link:hover,
+.wp-block-button__link:focus {
+    background-color: var(--wp--preset--color--neon-cyan, #BF5FFF) !important;
+    color: #000 !important;
+}
+
+/* --- Counter section --- */
+.area51-counter-section {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1rem;
+    color: #8a8a8a;
+    letter-spacing: 0.05em;
+}
+
+.area51-counter-value {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: #BF5FFF;
+    font-weight: bold;
+    text-shadow: 0 0 6px rgba(191, 95, 255, 0.4);
+    letter-spacing: 0.05em;
+    margin-right: 0.2em;
+}
+
+/* --- Remove excess bottom space from WP block groups / shortcode containers --- */
+.area51-board-section > .wp-block-shortcode:last-child,
+.area51-board-section > *:last-child,
+.area51-personnel-files-section > *:last-child,
+.area51-tribute-section > *:last-child,
+.area51-press-section > *:last-child,
+.area51-faq-section > *:last-child,
+.area51-memory-wall-section > *:last-child,
+.area51-flyer-gallery-section > *:last-child {
+    margin-bottom: 0;
+}
+
+.area51-board-section,
+.area51-personnel-files-section,
+.area51-tribute-section,
+.area51-press-section,
+.area51-faq-section,
+.area51-memory-wall-section,
+.area51-flyer-gallery-section,
+.music-page .music-page-section {
+    padding-bottom: 3rem;
+}
+
+/* --- Board intro paragraph --- */
+.area51-board-intro {
+    color: #8a8a8a;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* --- Footer --- */
+.area51-footer {
+    background-color: #0d0d0d;
+    border-top: 1px solid #BF5FFF;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.area51-footer__event {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #BF5FFF;
+    margin-bottom: 0.75rem;
+}
+
+/* Force the footer title's stored line break ("Area 51 30 Year Reunion" /
+   "1996 - 2026 - Halloween") to render as two lines on mobile; desktop
+   ignores it (collapses to a normal space) since white-space stays at its
+   default there — same technique as the header site title. */
+@media (max-width: 640px) {
+    .area51-footer__event {
+        white-space: pre-line;
+    }
+}
+
+.area51-footer__links {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+    color: #8a8a8a;
+}
+
+.area51-footer__links a,
+.area51-footer__links a:visited {
+    color: #8a8a8a;
+    text-decoration: none;
+}
+
+.area51-footer__links a:hover {
+    color: #BF5FFF;
+}
+
+.area51-footer__copy {
+    font-size: 0.65rem;
+    color: #555;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* Remove default WP paragraph margins inside footer */
+.area51-footer p {
+    margin: 0 0 0.5rem;
+}
+
+/* ==========================================================================
+   1a. Countdown display — neon cyan glow
+   ========================================================================== */
+.area51-countdown-display-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.area51-countdown-display {
+    font-size: clamp(2rem, 5vw, 4rem);
+    color: #BF5FFF;
+    text-shadow: 0 0 8px #BF5FFF, 0 0 20px #BF5FFF, 0 0 40px #BF5FFF;
+    letter-spacing: 0.05em;
+    font-family: "Courier New", Courier, monospace;
+    line-height: 1;
+}
+
+.area51-countdown-format {
+    font-size: 0.7rem;
+    color: #8a8a8a;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-family: "Courier New", Courier, monospace;
+}
+
+/* ==========================================================================
+   1b. Subscribe form inputs
+   ========================================================================== */
+.area51-subscribe-form input[type="email"] {
+    background-color: var(--wp--custom--card-bg, #1a1a1a);
+    color: var(--wp--custom--text-color, #c8b89a);
+    border: 1px solid var(--wp--custom--accent-color, #BF5FFF);
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    padding: 0.6em 0.8em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   1c. Button and hover state
+   ========================================================================== */
+.area51-btn {
+    background-color: transparent;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    border: 1px solid var(--wp--custom--accent-color, #BF5FFF);
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    padding: 0.5em 1.2em;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: background-color 0.2s, color 0.2s;
+}
+.area51-btn:hover,
+.area51-btn:focus {
+    background-color: var(--wp--custom--accent-color, #BF5FFF);
+    color: #000;
+}
+
+/* ==========================================================================
+   1d. Card grid
+   ========================================================================== */
+.area51-board-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem 0;
+}
+@media (max-width: 480px) {
+    .area51-board-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================================
+   1e. Card base
+   ========================================================================== */
+.area51-card {
+    background-color: var(--wp--custom--card-bg, #1a1a1a);
+    border: 1px solid var(--wp--custom--border-color, #3a3a3a);
+    padding: 1.5rem;
+    text-align: center;
+    position: relative; /* required for ::after stamp overlays (Layer 03) */
+}
+.area51-card__silhouette {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    display: block;
+    opacity: 0.6;
+}
+.area51-card__alias {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--wp--custom--text-color, #c8b89a);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+}
+.area51-card__role,
+.area51-card__era {
+    font-size: 0.85rem;
+    color: var(--wp--custom--muted-color, #888);
+}
+
+/* ==========================================================================
+   1f. CLASSIFIED stamp — pure CSS ::after pseudo-element, no SVG, no external font
+   ========================================================================== */
+.area51-card--classified {
+    overflow: hidden;
+}
+.area51-card--classified::after {
+    content: "CLASSIFIED";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    color: #cc0000;
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    border: 2px solid #cc0000;
+    padding: 0.25em 0.5em;
+    opacity: 0.85;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   1g. Clearance form inputs and labels
+   ========================================================================== */
+.area51-clearance-form input[type="text"],
+.area51-clearance-form input[type="email"],
+.area51-clearance-form textarea,
+.area51-clearance-form select {
+    background-color: var(--wp--custom--card-bg, #1a1a1a);
+    color: var(--wp--custom--text-color, #c8b89a);
+    border: 1px solid var(--wp--custom--accent-color, #BF5FFF);
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    padding: 0.6em 0.8em;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+}
+.area51-clearance-form label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--wp--custom--muted-color, #888);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.area51-form-feedback {
+    margin-top: 1rem;
+    padding: 0.6em 0.8em;
+    font-size: 0.9rem;
+}
+.area51-form-feedback--success {
+    border: 1px solid var(--wp--custom--accent-color, #BF5FFF);
+    color: var(--wp--custom--accent-color, #BF5FFF);
+}
+.area51-form-feedback--error {
+    border: 1px solid #cc0000;
+    color: #cc0000;
+}
+
+/* ==========================================================================
+   1h. Clearance section spacing
+   ========================================================================== */
+.area51-clearance-section {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* ==========================================================================
+   1i. DECLASSIFIED card state (Layer 03)
+   ========================================================================== */
+.area51-card--declassified {
+    border-color: #0a0;
+    box-shadow: 0 0 12px rgba(0, 200, 0, 0.4);
+}
+
+.area51-card--declassified .area51-card__name {
+    color: var(--wp--preset--color--neon-green, #0a0);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.area51-card--declassified::after {
+    content: 'DECLASSIFIED';
+    color: #0a0;
+    border-color: #0a0;
+    /* Inherit position, rotate, font from .area51-card--classified::after pattern */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-family: var(--wp--preset--font-family--monospace, monospace);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    border: 2px solid #0a0;
+    padding: 2px 8px;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   Layer 04: Dossier page — classified document aesthetic
+   ========================================================================== */
+
+/* Dossier page outer container */
+.dossier-page .area51-dossier-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* Case file header block (static document chrome) */
+.dossier-case-header {
+    background: var(--wp--preset--color--manila, #f5e6c8);
+    color: #1a1a1a;
+    border: 2px solid #3a3a3a;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    font-family: var(--wp--preset--font-family--monospace, monospace);
+    font-size: 0.85rem;
+    overflow: hidden;
+}
+
+/* Case file number and rows */
+.dossier-case-number {
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+}
+.dossier-classification-row,
+.dossier-date-row {
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.dossier-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #555;
+    font-size: 0.75rem;
+}
+.dossier-value {
+    font-weight: bold;
+    color: #1a1a1a;
+}
+
+/* DECLASSIFIED rubber stamp — diagonal overlay on case header */
+.dossier-stamp--declassified {
+    position: absolute;
+    top: 50%;
+    right: 1.5rem;
+    transform: translateY(-50%) rotate(-20deg);
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #0a6600;
+    border: 3px solid #0a6600;
+    padding: 0.2em 0.5em;
+    letter-spacing: 0.15em;
+    opacity: 0.85;
+    pointer-events: none;
+    white-space: nowrap;
+    font-family: var(--wp--preset--font-family--monospace, monospace);
+}
+
+/* Dossier section headings */
+.dossier-page h2 {
+    font-family: var(--wp--preset--font-family--monospace, monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border-bottom: 1px solid var(--wp--preset--color--concrete, #8a8a8a);
+    padding-bottom: 0.5rem;
+    margin-top: 2.5rem;
+    color: var(--wp--preset--color--manila, #f5e6c8);
+    font-size: 0.9rem;
+}
+
+/* Section dividers */
+.dossier-page .wp-block-separator {
+    border-color: var(--wp--preset--color--concrete, #8a8a8a);
+    opacity: 0.4;
+}
+
+/* Redaction spans */
+.area51-redacted {
+    background: #111;
+    color: #111;
+    user-select: none;
+    padding: 0 0.2em;
+    border-radius: 1px;
+    cursor: default;
+}
+/* Allow selection copy to reveal nothing */
+.area51-redacted::selection {
+    background: #333;
+    color: #333;
+}
+
+/* In Memoriam block — muted treatment */
+.dossier-in-memoriam {
+    border-left: 3px solid var(--wp--preset--color--concrete, #8a8a8a);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    opacity: 0.75;
+    font-style: italic;
+}
+.dossier-in-memoriam-title {
+    font-style: normal;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--wp--preset--color--concrete, #8a8a8a);
+    margin-bottom: 0.5rem;
+}
+
+/* "EYES ONLY" background watermark — CSS-only, does not affect readability */
+.dossier-page main::before {
+    content: "EYES ONLY";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 8vw;
+    font-family: var(--wp--preset--font-family--monospace, monospace);
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.03);
+    pointer-events: none;
+    z-index: 0;
+    letter-spacing: 0.3em;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   Layer 05: Music Showcase — /music page
+   ========================================================================== */
+
+/* Scoped page container */
+.music-page .music-page-section {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* Section headings — THE LABELS / THE ARTISTS / THE SOUND */
+.music-section-heading {
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    border-bottom: 1px solid var(--wp--custom--border-color, #3a3a3a);
+    padding-bottom: 0.5rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+/* Label logo grid — 4 col desktop, 3 col tablet, 2 col mobile */
+.music-label-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+@media (max-width: 768px) {
+    .music-label-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .music-label-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Label tile base */
+.music-label-tile {
+    background-color: var(--wp--custom--card-bg, #1a1a1a);
+    border: 1px solid var(--wp--custom--border-color, #3a3a3a);
+    padding: 1.5rem;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Linked tile */
+.music-label-tile__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Placeholder text treatment inside tile */
+.music-label-tile__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 4rem;
+}
+.music-label-tile__name {
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    color: var(--wp--custom--text-color, #c8b89a);
+}
+
+/* Neon glow on hover */
+.music-label-tile:hover {
+    border-color: var(--wp--custom--accent-color, #BF5FFF);
+    box-shadow: 0 0 8px rgba(191, 95, 255, 0.4);
+}
+
+/* Artist graphic grid — 3 col desktop, 2 col tablet, 1 col mobile */
+.music-artist-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+@media (max-width: 768px) {
+    .music-artist-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .music-artist-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Artist card */
+.music-artist-card {
+    background-color: var(--wp--custom--card-bg, #1a1a1a);
+    border: 1px solid var(--wp--custom--border-color, #3a3a3a);
+    padding: 1.5rem;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.music-artist-card a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+.music-artist-card:hover {
+    border-color: var(--wp--custom--accent-color, #BF5FFF);
+    box-shadow: 0 0 8px rgba(191, 95, 255, 0.4);
+}
+.music-artist-card__silhouette {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    display: block;
+    opacity: 0.6;
+}
+.music-artist-card__name {
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    color: var(--wp--custom--text-color, #c8b89a);
+}
+
+/* Playlist embed wrappers */
+.music-playlist-embed {
+    margin-bottom: 2.5rem;
+}
+.music-playlist-embed__label {
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.85rem;
+    color: var(--wp--custom--muted-color, #888);
+    margin-bottom: 0.75rem;
+}
+/* YouTube embed — responsive 16:9 */
+.music-playlist-embed__frame {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    background: #0d0d0d;
+    border: 1px solid #2a2a2a;
+}
+.music-playlist-embed__frame iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* Section dividers */
+.music-section-divider {
+    border: none;
+    border-top: 1px solid var(--wp--custom--border-color, #3a3a3a);
+    margin: 3rem 0;
+}
+
+/* Teaser row — one-row preview (Music page) linking out to the full Labels / Artists page */
+.music-label-grid.music-teaser-row,
+.music-artist-grid.music-teaser-row {
+    grid-template-columns: repeat(6, 1fr);
+}
+@media (max-width: 768px) {
+    .music-label-grid.music-teaser-row,
+    .music-artist-grid.music-teaser-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .music-label-grid.music-teaser-row,
+    .music-artist-grid.music-teaser-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+.music-teaser-row .music-label-tile,
+.music-teaser-row .music-artist-card {
+    padding: 0.85rem;
+}
+.music-teaser-row .music-label-tile__name {
+    font-size: 0.65rem;
+}
+.music-teaser-row .music-artist-card__silhouette {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0.5rem;
+}
+.music-teaser-row .music-artist-card__name {
+    font-size: 0.7rem;
+}
+
+/* "..." tile — the last teaser-row tile, links to the full Labels / Artists page */
+.music-more-tile .music-artist-card__silhouette-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    margin-bottom: 0.5rem;
+}
+.music-more-tile__ellipsis {
+    font-size: 1.4rem;
+    letter-spacing: 0.3em;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+}
+
+/* Full Labels / Artists page — NOW section placeholder (no current-era content yet) */
+.music-now-placeholder {
+    background: #111;
+    border: 1px dashed var(--wp--custom--border-color, #3a3a3a);
+    color: var(--wp--preset--color--neon-green, #39ff14);
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* THE SOUND — Then/Now DJ attribution */
+.music-sound-intro {
+    color: var(--wp--custom--muted-color, #888);
+    font-size: 0.9rem;
+    max-width: 60ch;
+    margin-bottom: 1.5rem;
+}
+.music-sound-subheading {
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 1rem;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    margin: 2rem 0 1rem;
+}
+.music-sound-era-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+@media (max-width: 768px) {
+    .music-sound-era-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ========================================
+   LAYER 06: MEMORY WALL
+   ======================================== */
+
+/* Page layout */
+.area51-memory-wall-section {
+    padding: 2rem 1rem;
+}
+
+/* Incident Report display cards */
+.incident-reports-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.incident-report-card {
+    border: 1px solid var(--wp--custom--accent-color, #BF5FFF);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 1.5rem;
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+}
+
+.ir-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--wp--custom--accent-color, #BF5FFF);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.ir-card-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    text-transform: uppercase;
+}
+
+.ir-classification-stamp {
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    border: 1px solid currentColor;
+    padding: 0.2rem 0.5rem;
+    color: #ff4444;
+    text-transform: uppercase;
+}
+
+.ir-field {
+    margin-bottom: 0.75rem;
+}
+
+.ir-field-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+}
+
+.ir-field-value {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.5;
+}
+
+.incident-report-empty {
+    padding: 2rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    letter-spacing: 0.1em;
+}
+
+/* Submission form */
+#incident-report-form-wrap {
+    margin-top: 3rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 2rem;
+}
+
+#incident-report-form .ir-form-field {
+    margin-bottom: 1.25rem;
+}
+
+#incident-report-form label {
+    display: block;
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+}
+
+.ir-required {
+    color: rgba(255, 68, 68, 0.8);
+}
+
+#incident-report-form input[type="date"],
+#incident-report-form input[type="text"],
+#incident-report-form textarea,
+#incident-report-form select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    font-size: 0.85rem;
+    padding: 0.6rem 0.75rem;
+    box-sizing: border-box;
+}
+
+#incident-report-form input[type="date"]:focus,
+#incident-report-form input[type="text"]:focus,
+#incident-report-form textarea:focus,
+#incident-report-form select:focus {
+    outline: none;
+    border-color: var(--wp--custom--accent-color, #BF5FFF);
+}
+
+#incident-report-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+#ir-submit-btn {
+    margin-top: 1rem;
+}
+
+.ir-confirmation-message {
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    text-transform: uppercase;
+    padding: 1.5rem;
+    border: 1px solid var(--wp--custom--accent-color, #BF5FFF);
+    text-align: center;
+}
+
+#incident-report-error {
+    color: #ff4444;
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    border: 1px solid #ff4444;
+}
+
+/* ========================================
+   LAYER 07: PERSONNEL FILES
+   ======================================== */
+
+/* Page layout */
+.personnel-files-page .area51-personnel-files-section {
+    padding: 2rem 1rem;
+}
+
+/* Card grid — responsive auto-fit */
+.personnel-files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--wp--preset--spacing--40, 1.5rem);
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 480px) {
+    .personnel-files-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Individual card — classified document format */
+.personnel-file-card {
+    background-color: var(--wp--custom--card-bg, #1a1a1a);
+    border: 1px solid var(--wp--custom--accent-color, #BF5FFF);
+    padding: 1.5rem;
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Card header band */
+.pf-card-header {
+    border-bottom: 1px solid var(--wp--custom--accent-color, #BF5FFF);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.pf-card-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    text-transform: uppercase;
+}
+
+/* Photo */
+.pf-photo {
+    display: flex;
+    justify-content: center;
+    margin: 0.5rem 0;
+}
+
+.pf-photo-wrap img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid var(--wp--custom--border-color, #3a3a3a);
+    opacity: 0.85;
+    display: block;
+}
+
+/* Alias — name/codename */
+.pf-alias {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+}
+
+/* Role and era — muted labels */
+.pf-role,
+.pf-era {
+    font-size: 0.8rem;
+    color: var(--wp--custom--muted-color, #888);
+    letter-spacing: 0.08em;
+}
+
+/* Optional bio paragraph */
+.pf-bio {
+    font-size: 0.8rem;
+    color: var(--wp--custom--text-color, #c8b89a);
+    line-height: 1.5;
+    text-align: left;
+    margin-top: 0.5rem;
+}
+
+/* Playlist section wrapper — THEN / NOW */
+.pf-playlist {
+    margin-top: 0.75rem;
+    border-top: 1px solid var(--wp--custom--border-color, #3a3a3a);
+    padding-top: 0.75rem;
+    text-align: left;
+}
+
+/* THEN / NOW label */
+.pf-playlist-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+}
+
+/* Iframe container — prevents overflow in multi-column grid */
+.pf-playlist-embed {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.pf-playlist-embed iframe {
+    width: 100%;
+    max-width: 100%;
+    border: none;
+    display: block;
+}
+
+/* Placeholder text when no embed is set */
+.pf-playlist-embed--placeholder {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.3);
+    font-style: italic;
+    letter-spacing: 0.1em;
+    padding: 0.5rem 0;
+}
+
+/* Empty state */
+.personnel-files-empty {
+    padding: 2rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    letter-spacing: 0.1em;
+}
+
+/* ========================================
+   LAYER 08: FLYER GALLERY
+   ======================================== */
+
+/* 6a. Grid layout — 3 col desktop, 2 col tablet, 1 col mobile */
+.flyer-gallery-page .flyer-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+@media (max-width: 1023px) {
+    .flyer-gallery-page .flyer-gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 639px) {
+    .flyer-gallery-page .flyer-gallery-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 6b. Card base — block-level; no inline elements at top level */
+.flyer-gallery-page .flyer-card {
+    border: 1px solid var(--wp--custom--accent-color, #BF5FFF);
+    padding: 0.75rem;
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 6c. Card image with aspect-ratio + @supports fallback */
+.flyer-gallery-page .flyer-card-image {
+    width: 100%;
+    overflow: hidden;
+}
+@supports (aspect-ratio: 3/4) {
+    .flyer-gallery-page .flyer-card-image {
+        aspect-ratio: 3/4;
+    }
+}
+@supports not (aspect-ratio: 3/4) {
+    .flyer-gallery-page .flyer-card-image {
+        position: relative;
+        padding-top: 133.33%;
+    }
+    .flyer-gallery-page .flyer-card-image img {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+.flyer-gallery-page .flyer-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* 6d. Placeholder card — same aspect-ratio treatment */
+.flyer-gallery-page .flyer-card-placeholder {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #111;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    font-family: var(--wp--preset--font-family--mono, monospace);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-align: center;
+    padding: 1rem;
+}
+@supports (aspect-ratio: 3/4) {
+    .flyer-gallery-page .flyer-card-placeholder {
+        aspect-ratio: 3/4;
+    }
+}
+@supports not (aspect-ratio: 3/4) {
+    .flyer-gallery-page .flyer-card-placeholder {
+        min-height: 200px;
+    }
+}
+
+/* 6e. Card header, notes, empty state */
+.flyer-gallery-page .flyer-card-header {
+    font-family: var(--wp--preset--font-family--mono, monospace);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: #aaa;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.4rem;
+}
+.flyer-gallery-page .flyer-card-notes {
+    font-family: var(--wp--preset--font-family--mono, monospace);
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.5rem;
+}
+.flyer-gallery-page .flyer-gallery-empty {
+    text-align: center;
+    padding: 3rem;
+    color: #555;
+    font-family: var(--wp--preset--font-family--mono, monospace);
+    letter-spacing: 0.1em;
+}
+
+/* 6f. Confirmation / error banners */
+.flyer-gallery-page .fg-confirmation-banner {
+    background: #1a0d26;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    border: 1px solid var(--wp--custom--accent-color, #BF5FFF);
+    padding: 0.75rem 1rem;
+    font-family: var(--wp--preset--font-family--mono, monospace);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+}
+.flyer-gallery-page .fg-error-banner {
+    background: #1a0000;
+    color: #ff4444;
+    border: 1px solid #ff4444;
+    padding: 0.75rem 1rem;
+    font-family: var(--wp--preset--font-family--mono, monospace);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+}
+
+/* 6g. Submission form */
+.flyer-gallery-page .fg-submit-form {
+    margin-top: 3rem;
+    border-top: 1px solid #333;
+    padding-top: 2rem;
+}
+.flyer-gallery-page .fg-form-field {
+    margin-bottom: 1.25rem;
+}
+.flyer-gallery-page .fg-form-field label {
+    display: block;
+    font-family: var(--wp--preset--font-family--mono, monospace);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: #aaa;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+}
+.flyer-gallery-page .fg-form-field input[type="text"],
+.flyer-gallery-page .fg-form-field input[type="file"],
+.flyer-gallery-page .fg-form-field textarea {
+    width: 100%;
+    background: #111;
+    border: 1px solid #444;
+    color: #eee;
+    font-family: var(--wp--preset--font-family--mono, monospace);
+    padding: 0.5rem;
+    box-sizing: border-box;
+}
+.flyer-gallery-page .fg-form-field textarea {
+    resize: vertical;
+}
+
+/* ==========================================================================
+   Layer 09: FAQ / TRIBUTE / PRESS
+   ========================================================================== */
+
+/* --- FAQ Page --- */
+
+.faq-page .area51-faq-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* FAQ item card */
+.faq-item {
+    border: 1px solid var(--wp--custom--border-color, #3a3a3a);
+    background: var(--wp--custom--card-bg, #1a1a1a);
+    margin-bottom: 1.5rem;
+    padding: 0;
+}
+
+/* Q: label row */
+.faq-question {
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    background: rgba(0, 255, 204, 0.05);
+    border-bottom: 1px solid var(--wp--custom--border-color, #3a3a3a);
+    padding: 0.75rem 1rem;
+    font-weight: bold;
+}
+
+/* Answer block */
+.faq-answer {
+    padding: 0.9rem 1rem 0.75rem;
+    font-size: 0.95rem;
+    color: var(--wp--custom--text-color, #c8b89a);
+    line-height: 1.6;
+}
+.faq-answer p {
+    margin: 0;
+}
+
+/* --- Tribute Page --- */
+
+.tribute-page .area51-tribute-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* Tribute subject container */
+.tribute-subject {
+    margin-bottom: 3rem;
+}
+
+/* Override .dossier-in-memoriam for tribute page context */
+.tribute-page .dossier-in-memoriam {
+    border-left-color: var(--wp--custom--accent-color, #BF5FFF);
+    opacity: 0.85;
+}
+
+/* Status line — STATUS: MISSING IN ACTION */
+.tribute-status {
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--wp--custom--concrete, #8a8a8a);
+    margin-top: 0.5rem;
+}
+
+/* --- Press Page --- */
+
+.press-page .area51-press-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* Press citation card */
+.press-citation {
+    border: 1px solid var(--wp--custom--border-color, #3a3a3a);
+    background: var(--wp--custom--card-bg, #1a1a1a);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+/* Outlet header row */
+.press-citation__outlet {
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    margin-bottom: 0.5rem;
+}
+
+/* Star rating */
+.press-citation__rating {
+    font-size: 1.1rem;
+    color: var(--wp--custom--accent-color, #BF5FFF);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.1em;
+}
+
+/* Pull-quote body */
+.press-citation__quote {
+    font-style: italic;
+    color: var(--wp--custom--text-color, #c8b89a);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    border-left: 3px solid var(--wp--custom--border-color, #3a3a3a);
+    padding-left: 1rem;
+    margin: 0.5rem 0 0.75rem;
+}
+
+/* Date / meta line */
+.press-citation__meta {
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--wp--custom--concrete, #8a8a8a);
+    text-transform: uppercase;
+}
+
+/* Placeholder block */
+.press-placeholder {
+    border: 1px dashed var(--wp--custom--border-color, #3a3a3a);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.55;
+    font-family: var(--wp--preset--font-family--monospace, 'Courier New', monospace);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--wp--custom--concrete, #8a8a8a);
+}

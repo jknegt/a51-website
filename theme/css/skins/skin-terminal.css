@@ -1,0 +1,62 @@
+/* [Redesign 2026-07-27] skin-terminal.css — "Gear / Signal"
+   No longer a distinct color skin. All typography, layout, and color come
+   from the unscoped Classified baseline in area51-components.css, untouched.
+   This file adds exactly one graphic identity: a purple-tinted rendering of
+   the Area 51 gear + Vitruvian-Man mark (assets/images/Area 51 logo White
+   (best).png), used as a slow-rotating watermark. Everything below is scoped
+   under body.skin-terminal so it can never affect the default look. */
+
+/* --- Sitewide: small mark in the footer corner, present on every page --- */
+body.skin-terminal .area51-footer {
+    position: relative;
+    overflow: hidden;
+}
+
+body.skin-terminal .area51-footer::before {
+    content: "";
+    position: absolute;
+    bottom: 10px;
+    right: 24px;
+    width: 72px;
+    height: 72px;
+    background-image: url("../../images/skins/gear-mark-purple.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.22;
+    pointer-events: none;
+    z-index: 0;
+    animation: area51-gear-spin 60s linear infinite;
+}
+
+/* --- Sitewide: large rotating watermark fixed behind every page's content,
+   not just the homepage hero. Fixed to the viewport (not a section) so it
+   shows consistently regardless of how tall any given page is; z-index -1
+   keeps it beneath in-flow content and behind any element with its own
+   background (header, footer, cards), same as the original hero treatment. --- */
+body.skin-terminal::before {
+    content: "";
+    position: fixed;
+    top: 10%;
+    right: 0;
+    width: min(480px, 55vw);
+    height: min(480px, 55vw);
+    background-image: url("../../images/skins/gear-mark-purple.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.07;
+    pointer-events: none;
+    z-index: -1;
+    animation: area51-gear-spin 140s linear infinite;
+}
+
+@keyframes area51-gear-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.skin-terminal .area51-footer::before,
+    body.skin-terminal::before {
+        animation: none;
+    }
+}
