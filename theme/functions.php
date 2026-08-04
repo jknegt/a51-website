@@ -104,6 +104,15 @@ function area51_press_body_class( array $classes ): array {
     return $classes;
 }
 
+// Skin decision locked in: "Gear / Signal" (skin-terminal) is now the permanent
+// sitewide style, applied unconditionally (replaces the removed admin-only
+// style switcher from Layer 11). Same body_class pattern as the filters above.
+add_filter( 'body_class', 'area51_skin_terminal_body_class' );
+function area51_skin_terminal_body_class( array $classes ): array {
+    $classes[] = 'skin-terminal';
+    return $classes;
+}
+
 // Custom Post Types — Layer 02+ will register Missing Persons (classified_person) and
 // Clearance Requests (clearance_request) here. Stubs only at Layer 00.
 // function area51_register_post_types() { ... }
@@ -218,9 +227,6 @@ require_once get_template_directory() . '/inc/personnel-files.php';
 // [Layer 08] Flyer Gallery: CPT, meta box, shortcodes, upload handler
 require_once get_template_directory() . '/inc/flyer-gallery.php';
 
-// [Layer 11] Style switcher infrastructure — admin-only, isolated, removable.
-require_once get_template_directory() . '/inc/style-switcher.php';
-
 // Register AJAX actions — subscribe
 add_action( 'wp_ajax_nopriv_area51_subscribe', 'area51_handle_subscribe' );
 add_action( 'wp_ajax_area51_subscribe',        'area51_handle_subscribe' );
@@ -249,6 +255,15 @@ function area51_enqueue_scripts(): void {
         $theme_uri . '/css/area51-components.css',
         [],
         '2.9.7'
+    );
+
+    // Skin decision locked in: "Gear / Signal" — was Layer 11's admin-only
+    // skin-terminal option, now the permanent sitewide style (switcher removed).
+    wp_enqueue_style(
+        'area51-skin-terminal',
+        $theme_uri . '/css/skins/skin-terminal.css',
+        [ 'area51-components' ],
+        '1.0.10'
     );
 
     wp_enqueue_script(
