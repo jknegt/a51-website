@@ -138,7 +138,7 @@ function area51_register_shortcodes(): void {
 
 function area51_counter_shortcode(): string {
     $count = (int) get_option( 'area51_located_count', 0 );
-    return '<span class="area51-counter-value">' . esc_html( $count ) . '</span> of 47 subjects located';
+    return '<span class="area51-counter-value">' . esc_html( $count ) . '</span> out of <span class="area51-redacted">47</span> subjects located';
 }
 
 /**

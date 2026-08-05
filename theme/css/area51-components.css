@@ -27,7 +27,7 @@ body {
 .area51-header {
     background-color: #0d0d0d;
     border-bottom: 1px solid #BF5FFF;
-    padding: 1rem 2rem;
+    padding: 2.5rem 2rem;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -132,7 +132,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.18em;
     font-family: "Courier New", Courier, monospace;
-    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
     font-weight: bold;
     text-shadow: 0 0 6px rgba(191, 95, 255, 0.5);
 }
