@@ -27,7 +27,15 @@ function area51_site_title_add_dash( string $block_content ): string {
 // Security hardening (post-incident, 2026-08-05): XML-RPC is a well-known
 // brute-force/amplification vector (pingback abuse, system.multicall).
 // This site has no use for remote publishing or XML-RPC-based integrations.
+// The xmlrpc_enabled filter alone does NOT block the endpoint (verified —
+// system.listMethods still responded with it set) since xmlrpc.php is a
+// separate bootstrap script that only checks that filter for specific
+// methods like pingback. Hard-block the request itself instead.
 add_filter( 'xmlrpc_enabled', '__return_false' );
+if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
+    http_response_code( 403 );
+    die( 'XML-RPC is disabled on this site.' );
+}
 
 // [Layer 03] ISSUE-006 fix: reorder wpautop to run after do_shortcode (priority 11).
 // wpautop at default priority 10 adds stray </p> inside shortcode output.
