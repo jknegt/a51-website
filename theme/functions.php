@@ -8,6 +8,27 @@
  * CSS custom properties flow through theme.json, not style.css enqueue.
  */
 
+// Site title: the stored title ("Area 51" newline "30 Year Reunion") uses a
+// literal newline + CSS white-space:pre-line so mobile shows two lines while
+// desktop collapses it to a single line. Desktop should show a dash where
+// that collapse happens; mobile should stay exactly as it was (clean two
+// lines, no dash). A single text string can't do both with CSS alone, so
+// replace the newline with an explicit dash span + <br> and control each
+// independently per breakpoint (see area51-components.css).
+add_filter( 'render_block_core/site-title', 'area51_site_title_add_dash', 10, 1 );
+function area51_site_title_add_dash( string $block_content ): string {
+    return str_replace(
+        "\n",
+        '<span class="area51-title-dash"> &mdash; </span><br class="area51-title-break">',
+        $block_content
+    );
+}
+
+// Security hardening (post-incident, 2026-08-05): XML-RPC is a well-known
+// brute-force/amplification vector (pingback abuse, system.multicall).
+// This site has no use for remote publishing or XML-RPC-based integrations.
+add_filter( 'xmlrpc_enabled', '__return_false' );
+
 // [Layer 03] ISSUE-006 fix: reorder wpautop to run after do_shortcode (priority 11).
 // wpautop at default priority 10 adds stray </p> inside shortcode output.
 // Moving to priority 12 ensures shortcodes run first, then wpautop wraps any remaining prose.
@@ -138,7 +159,7 @@ function area51_register_shortcodes(): void {
 
 function area51_counter_shortcode(): string {
     $count = (int) get_option( 'area51_located_count', 0 );
-    return '<span class="area51-counter-value">' . esc_html( $count ) . '</span> out of <span class="area51-redacted">47</span> subjects located';
+    return '<span class="area51-counter-value">' . esc_html( $count ) . '</span> out of <span class="area51-redacted">&nbsp;&nbsp;47&nbsp;&nbsp;</span> subjects located';
 }
 
 /**

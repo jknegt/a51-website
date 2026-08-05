@@ -137,12 +137,27 @@ body {
     text-shadow: 0 0 6px rgba(191, 95, 255, 0.5);
 }
 
-/* Force the site title's stored line break ("Area 51" / "30 Year Reunion")
-   to render as two lines on mobile; desktop ignores it (collapses to a
-   normal space) since white-space stays at its default there. */
+/* Site title "Area 51 — 30 Year Reunion" (desktop) vs "Area 51" / "30 Year
+   Reunion" (mobile, unchanged two-line layout, no dash). The dash span and
+   the <br> are inserted by area51_site_title_add_dash() in functions.php;
+   each is shown/hidden per breakpoint here instead of relying on
+   white-space collapsing, since a single text string can't otherwise
+   differ between the two views. */
+.area51-title-dash {
+    display: inline;
+}
+
+.area51-title-break {
+    display: none;
+}
+
 @media (max-width: 640px) {
-    .area51-header .wp-block-site-title a {
-        white-space: pre-line;
+    .area51-title-dash {
+        display: none;
+    }
+
+    .area51-title-break {
+        display: inline;
     }
 }
 
