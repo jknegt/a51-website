@@ -110,6 +110,6 @@ function area51_handle_subscribe(): void {
     }
 
     wp_send_json_success( [
-        'message' => 'Your clearance request has been filed. Confirmation incoming.',
+        'message' => 'Your subscription has been filed. Confirmation incoming.',
     ] );
 }
