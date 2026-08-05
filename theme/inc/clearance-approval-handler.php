@@ -77,7 +77,7 @@ function area51_handle_approve_clearance(): void {
 
     // 5. Build and send approval email
     $subject = '[AREA 51] Clearance Level ' . $level . ' Granted — Codename: ' . $codename;
-    $body    = "CLEARANCE APPROVED.\n\nYour application has been processed.\n\nClearance Level: " . $level . "\nCodename: " . $codename . "\n\nEvent: October 31, 2026 — Vatican Gift Shop, Toronto\n\nWelcome to the inner circle.\n\n— Area 51 Command";
+    $body    = "CLEARANCE APPROVED.\n\nYour application has been processed.\n\nClearance Level: " . $level . "\nCodename: " . $codename . "\n\nEvent: October [REDACTED], 2026 — [REDACTED]\n\nWelcome to the inner circle.\n\n— Area 51 Command";
 
     $resend_settings = get_option( 'resend_settings', [] );
     $from_email      = $resend_settings['from_email'] ?? ( defined( 'RESEND_FROM_EMAIL' ) ? RESEND_FROM_EMAIL : '' );

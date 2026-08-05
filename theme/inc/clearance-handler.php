@@ -86,6 +86,20 @@ function area51_handle_clearance_request() {
         wp_mail( $admin_email, $admin_subject, $admin_body, $headers );
     }
 
+    // 3. Add to Kit (secondary — failure does not block success response).
+    // Clearance requesters previously only reached Kit if they *also* used the
+    // separate subscribe form — same pattern as subscribe-handler.php so every
+    // funnel feeds the one audience the dashboard/broadcast tooling reads from.
+    $kit_settings = get_option( '_wp_convertkit_settings', [] );
+    $kit_api_key  = $kit_settings['api_key'] ?? '';
+    $kit_form_id  = (int) get_option( 'area51_kit_form_id', 0 );
+
+    if ( ! empty( $kit_api_key ) ) {
+        area51_kit_add_subscriber( $submitter_email, $kit_api_key, $kit_form_id );
+    } else {
+        error_log( 'Area51 Clearance: Kit API key not configured — submitter not added to Kit.' );
+    }
+
     wp_send_json_success( [ 'message' => 'Request received.' ] );
 }
 
