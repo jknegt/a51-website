@@ -48,6 +48,16 @@ function area51_handle_clearance_request() {
         wp_send_json_error( [ 'message' => 'Server error. Please try again.' ] );
     }
 
+    // Layer 14: Upsert unified contact record. Gated on wp_insert_post() success —
+    // this handler's own primary write and point of no return, since (unlike
+    // subscribe-handler.php) its confirmation email below is not itself gated on
+    // wp_mail()'s return value. clearance_level/clearance_codename are NOT passed
+    // here: at initial submission clearance_request's own clearance_level meta is
+    // always 0 (see line below) — nothing meaningful to snapshot yet. See
+    // SCOUT Section 5.4 for the known, accepted staleness gap this leaves for
+    // Layer 15/16 to close, not fixed here.
+    area51_upsert_contact( $submitter_email, 'clearance', [ 'display_name' => $display_name ] );
+
     // Store all submission fields as post meta
     update_post_meta( $post_id, 'submitter_name',  $name );
     update_post_meta( $post_id, 'submitter_alias', $alias );

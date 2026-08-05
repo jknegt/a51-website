@@ -92,6 +92,12 @@ function area51_handle_subscribe(): void {
         return;
     }
 
+    // Layer 14: Upsert unified contact record. Runs only after Resend confirmation
+    // succeeds — preserves this handler's existing email-first atomicity discipline.
+    // No display_name available on this path — omit the key entirely so a later
+    // Subscribe-path upsert never blanks a name a prior Clearance-path upsert set.
+    area51_upsert_contact( $email, 'subscribe' );
+
     // Add to Kit (secondary — failure does not block success response)
     $kit_settings = get_option( '_wp_convertkit_settings', [] );
     $kit_api_key  = $kit_settings['api_key'] ?? '';

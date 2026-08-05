@@ -97,6 +97,19 @@ function area51_handle_approve_clearance(): void {
     update_post_meta( $post_id, 'clearance_level',   $level );
     update_post_meta( $post_id, 'clearance_codename', $codename );
 
+    // Layer 15: Refresh the unified area51_contact record's clearance snapshot —
+    // closes ISSUE-020 (staleness deferred from Layer 14). Runs only after the
+    // approval email has already succeeded and clearance_request's own meta is
+    // already updated (same-request side effect, does not gate the response
+    // below). If no area51_contact record exists yet for this email (a
+    // clearance_request predating Layer 14), area51_upsert_contact()'s existing
+    // create-path runs — this is the desired behavior (SCOUT Decision 4), not a
+    // defect to guard against.
+    area51_upsert_contact( $submitter_email, 'clearance', [
+        'clearance_level'    => $level,
+        'clearance_codename' => $codename,
+    ] );
+
     // 7. Return success with codename and level
     wp_send_json_success( [ 'codename' => $codename, 'level' => $level ] );
 }

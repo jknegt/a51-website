@@ -256,6 +256,9 @@ require_once get_template_directory() . '/inc/personnel-files.php';
 // [Layer 08] Flyer Gallery: CPT, meta box, shortcodes, upload handler
 require_once get_template_directory() . '/inc/flyer-gallery.php';
 
+// Layer 14: Unified Contact CPT — area51_contact registration + area51_upsert_contact()
+require_once get_template_directory() . '/inc/contact-post-type.php';
+
 // Register AJAX actions — subscribe
 add_action( 'wp_ajax_nopriv_area51_subscribe', 'area51_handle_subscribe' );
 add_action( 'wp_ajax_area51_subscribe',        'area51_handle_subscribe' );
@@ -352,6 +355,7 @@ if ( is_admin() ) {
     require_once get_template_directory() . '/inc/admin-columns.php';
     require_once get_template_directory() . '/inc/declassify-handler.php';
     require_once get_template_directory() . '/inc/clearance-approval-handler.php';
+    require_once get_template_directory() . '/inc/contact-send-handler.php';   // Layer 16
 }
 
 // [Layer 03] Admin script enqueue — DECLASSIFY and Clearance Approve JS
@@ -388,6 +392,20 @@ function area51_enqueue_admin_scripts( string $hook_suffix ): void {
         wp_localize_script( 'area51-admin-clearance-approve', 'area51ClearanceApproveAdmin', [
             'ajaxurl' => admin_url( 'admin-ajax.php' ),
             'nonce'   => wp_create_nonce( 'area51_clearance_approve_nonce' ),
+        ] );
+    }
+
+    if ( 'area51_contact' === $post_type ) {
+        wp_enqueue_script(
+            'area51-admin-contact-send',
+            get_template_directory_uri() . '/js/admin-contact-send.js',
+            [],
+            '1.0.0',
+            true
+        );
+        wp_localize_script( 'area51-admin-contact-send', 'area51ContactSendAdmin', [
+            'ajaxurl' => admin_url( 'admin-ajax.php' ),
+            'nonce'   => wp_create_nonce( 'area51_contact_send_nonce' ),
         ] );
     }
 }
