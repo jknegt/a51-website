@@ -1,3 +1,3 @@
-FROM wordpress:6.5
+FROM wordpress:7.0
 COPY theme/ /var/www/html/wp-content/themes/area51-reunion/
 COPY plugins/ /var/www/html/wp-content/plugins/
