@@ -81,8 +81,8 @@ function area51_handle_subscribe(): void {
         'Content-Type: text/plain; charset=UTF-8',
         "From: {$from_name} <{$from_email}>",
     ];
-    $subject = '[CLASSIFIED] Subscription Confirmed — Area 51 Reunion';
-    $body    = "Your request for subscription has been processed.\n\nYou will be notified when subjects are declassified.\n\nThis message is classified. Do not share.\n\n— Area 51 Reunion Command";
+    $subject = 'Area 51 — 30 Year Reunion. One Night Only. Halloween.';
+    $body    = "It's been a long time — before smartphones, before the internet took over. This Halloween, for one night only, we're back from the dead — and we would love to see you again (or meet you for the first time) to fill your ears, move your feet and feed your head!\n\nWe won't flood your inbox. You'll hear from us only when the site has something new or when the party date and venue are declassified.\n\nWant to share old photos, stories, music, flyers, or memories? Request Clearance on the site.\n\n— Area 51\n  (Sandro, John, Dan)";
 
     $mail_sent = wp_mail( $email, $subject, $body, $headers );
 
