@@ -8,6 +8,39 @@
  * CSS custom properties flow through theme.json, not style.css enqueue.
  */
 
+// Social share preview (Open Graph + Twitter Card), added 2026-08-06 for
+// Facebook link-sharing. The site previously had no OG tags at all, so
+// pasting the URL anywhere produced an unpredictable preview. Front page
+// only -- this is currently a single canonical thing to share, not per-page
+// content. og:image is theme/images/og-share-a51.png, a 1200x630 crop of
+// assets/images/A51.png (Facebook's documented ideal ratio) -- the original
+// asset is untouched, this is a generated derivative living where the theme
+// can actually serve it (assets/ is never deployed, it's gitignored).
+add_action( 'wp_head', 'area51_social_share_meta_tags', 1 );
+function area51_social_share_meta_tags(): void {
+    if ( ! is_front_page() ) {
+        return;
+    }
+    $title       = 'Area 51 — 30 Year Reunion';
+    $description = 'Area 51 is back for one night only — a free Halloween reunion party, 30 years in the making. Click for details.';
+    $image_url   = get_template_directory_uri() . '/images/og-share-a51.png';
+    $page_url    = home_url( '/' );
+    ?>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Area 51 Reunion" />
+    <meta property="og:title" content="<?php echo esc_attr( $title ); ?>" />
+    <meta property="og:description" content="<?php echo esc_attr( $description ); ?>" />
+    <meta property="og:url" content="<?php echo esc_url( $page_url ); ?>" />
+    <meta property="og:image" content="<?php echo esc_url( $image_url ); ?>" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo esc_attr( $title ); ?>" />
+    <meta name="twitter:description" content="<?php echo esc_attr( $description ); ?>" />
+    <meta name="twitter:image" content="<?php echo esc_url( $image_url ); ?>" />
+    <?php
+}
+
 // Site title: the stored title ("Area 51" newline "30 Year Reunion") uses a
 // literal newline + CSS white-space:pre-line so mobile shows two lines while
 // desktop collapses it to a single line. Desktop should show a dash where
