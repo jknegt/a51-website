@@ -76,10 +76,12 @@ function area51_handle_clearance_request() {
     ];
 
     // 1. Submitter confirmation — "Clearance Pending"
-    $subj_confirm = '[CLASSIFIED] Clearance Request Received — Area 51 Reunion';
-    $body_confirm = "Your clearance request has been received and is under review.\n\n"
-        . "Stand by for further instructions.\n\n"
-        . "— Area 51 Clearance Division";
+    $subj_confirm = 'We got your request — Area 51 Reunion';
+    $body_confirm = "Hey — thanks for reaching out. Your request just landed with John.\n\n"
+        . "We're doing this to reconnect with the people who were there, and to meet some new friends along the way. He'll get back to you soon.\n\n"
+        . "Thanks for being a part of this.\n\n"
+        . "— Area 51\n"
+        . "  (Sandro, John, Dan)";
     wp_mail( $submitter_email, $subj_confirm, $body_confirm, $headers );
 
     // 2. John notification email
