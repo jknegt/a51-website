@@ -199,8 +199,7 @@ function area51_register_shortcodes(): void {
 }
 
 function area51_counter_shortcode(): string {
-    $count = (int) get_option( 'area51_located_count', 0 );
-    return '<span class="area51-counter-value">' . esc_html( $count ) . '</span> out of <span class="area51-redacted">&nbsp;&nbsp;47&nbsp;&nbsp;</span> subjects located';
+    return 'OCTOBER 2026 &mdash; Free Event &mdash; All Welcome &mdash; 19+';
 }
 
 /**
