@@ -316,11 +316,12 @@ function area51_enqueue_scripts(): void {
     // Version bumped to 2.9.6 to bust browser cache after mobile site-title 2-line break.
     // Version bumped to 2.9.7 to bust browser cache after homepage section-spacing fix and footer 2-line break.
     // Version bumped to 2.9.8 to bust browser cache after Layer 19 Subscribe-form input/textarea CSS parity fix.
+    // Version bumped to 2.9.9 to bust browser cache after Subscribe form row spacing fix.
     wp_enqueue_style(
         'area51-components',
         $theme_uri . '/css/area51-components.css',
         [],
-        '2.9.8'
+        '2.9.9'
     );
 
     // Skin decision locked in: "Gear / Signal" — was Layer 11's admin-only

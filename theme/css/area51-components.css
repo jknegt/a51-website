@@ -450,6 +450,9 @@ h2 {
 /* ==========================================================================
    1b. Subscribe form inputs
    ========================================================================== */
+.area51-form-row {
+    margin-bottom: 1rem;
+}
 .area51-subscribe-form input[type="email"],
 .area51-subscribe-form input[type="text"],
 .area51-subscribe-form textarea {
