@@ -8,6 +8,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         var form    = document.getElementById('area51-subscribe-form');
         var input   = document.getElementById('area51-email-input');
+        var nameInput   = document.getElementById('area51-name-input');
+        var memoryInput = document.getElementById('area51-memory-input');
         var btn     = document.getElementById('area51-subscribe-btn');
         var success = document.getElementById('area51-subscribe-success');
         var error   = document.getElementById('area51-subscribe-error');
@@ -38,6 +40,8 @@
             body.append('action', 'area51_subscribe');
             body.append('nonce',  area51Subscribe.nonce);
             body.append('email',  email);
+            body.append('name',   nameInput   ? nameInput.value.trim()   : '');
+            body.append('memory', memoryInput ? memoryInput.value.trim() : '');
 
             fetch(area51Subscribe.ajaxurl, {
                 method:  'POST',

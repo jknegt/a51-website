@@ -5,7 +5,7 @@
  *
  * Contains:
  *   2a. CPT registration (incident_report)
- *   2b. Meta registration (5 ir_* keys)
+ *   2b. Meta registration (6 ir_* keys)
  *   2c. Admin meta box
  *   2d. Meta save hook
  *   2e. Admin column customization
@@ -49,7 +49,7 @@ function area51_register_incident_report_cpt(): void {
     ] );
 
     // ===========================================================================
-    // 2b. Meta Registration (all five ir_* keys)
+    // 2b. Meta Registration (all six ir_* keys)
     // ===========================================================================
 
     $meta_args_text = [
@@ -72,6 +72,13 @@ function area51_register_incident_report_cpt(): void {
     register_post_meta( 'incident_report', 'ir_subjects_present',   $meta_args_area );
     register_post_meta( 'incident_report', 'ir_what_occurred',      $meta_args_area );
     register_post_meta( 'incident_report', 'ir_classification_level', $meta_args_text );
+    register_post_meta( 'incident_report', 'ir_source_contact_email', [
+        'object_subtype'    => 'incident_report',
+        'type'              => 'string',
+        'single'            => true,
+        'sanitize_callback' => 'sanitize_email',
+        'show_in_rest'      => false,
+    ] );
 }
 
 // ===========================================================================
@@ -383,6 +390,58 @@ function area51_incident_report_form_shortcode(): string {
 }
 
 // ===========================================================================
+// 2h-shared. Shared incident_report insertion helper
+// ===========================================================================
+
+/**
+ * Insert an incident_report post with the given fields. Shared by the Memory
+ * Wall AJAX handler (area51_submit_incident_report) and the Subscribe AJAX
+ * handler (area51_handle_subscribe) so the CPT's field list is declared once.
+ * Does NOT validate/sanitize $_POST, does NOT check nonces, does NOT enforce
+ * required fields — callers own their own validation before calling this.
+ * post_status is always 'pending' — not caller-overridable.
+ *
+ * @param array $fields Recognized keys (all optional, default ''):
+ *                       ir_date_of_incident, ir_location, ir_subjects_present,
+ *                       ir_what_occurred, ir_classification_level (defaults to
+ *                       'UNCLASSIFIED' if omitted/empty), ir_source_contact_email.
+ * @return int Post ID (0 on failure).
+ */
+function area51_create_incident_report_post( array $fields ): int {
+    $ir_date      = $fields['ir_date_of_incident']     ?? '';
+    $ir_location  = $fields['ir_location']             ?? '';
+    $ir_subjects  = $fields['ir_subjects_present']     ?? '';
+    $ir_occurred  = $fields['ir_what_occurred']        ?? '';
+    $ir_level     = $fields['ir_classification_level'] ?: 'UNCLASSIFIED';
+    $ir_src_email = $fields['ir_source_contact_email'] ?? '';
+
+    $title = trim( $ir_location . ' — ' . $ir_date );
+    if ( empty( trim( $title, ' —' ) ) ) {
+        $title = 'Memory Submission — ' . current_time( 'Y-m-d' );
+    }
+
+    $post_id = wp_insert_post( [
+        'post_type'   => 'incident_report',
+        'post_title'  => $title,
+        'post_status' => 'pending', // CRITICAL — never caller-overridable
+    ] );
+    if ( is_wp_error( $post_id ) ) {
+        return 0;
+    }
+
+    update_post_meta( $post_id, 'ir_date_of_incident',     $ir_date );
+    update_post_meta( $post_id, 'ir_location',             $ir_location );
+    update_post_meta( $post_id, 'ir_subjects_present',     $ir_subjects );
+    update_post_meta( $post_id, 'ir_what_occurred',        $ir_occurred );
+    update_post_meta( $post_id, 'ir_classification_level', $ir_level );
+    if ( $ir_src_email ) {
+        update_post_meta( $post_id, 'ir_source_contact_email', $ir_src_email );
+    }
+
+    return (int) $post_id;
+}
+
+// ===========================================================================
 // 2h. AJAX Handler
 // ===========================================================================
 
@@ -404,29 +463,19 @@ function area51_submit_incident_report(): void {
         wp_send_json_error( [ 'message' => 'WHAT OCCURRED field is required.' ] );
     }
 
-    // Build post title from location + date
-    $title = trim( $ir_location . ' — ' . $ir_date );
-    if ( empty( trim( $title, ' —' ) ) ) {
-        $title = 'Memory Submission — ' . current_time( 'Y-m-d' );
-    }
-
-    // Insert post — CRITICAL: post_status must be 'pending', never 'draft' or 'publish'
-    $post_id = wp_insert_post( [
-        'post_type'   => 'incident_report',
-        'post_title'  => $title,
-        'post_status' => 'pending',
+    // Insert via shared helper (Layer 19) — CRITICAL: post_status is hardcoded
+    // 'pending' inside the helper, never 'draft' or 'publish', not overridable here.
+    $post_id = area51_create_incident_report_post( [
+        'ir_date_of_incident'     => $ir_date,
+        'ir_location'             => $ir_location,
+        'ir_subjects_present'     => $ir_subjects,
+        'ir_what_occurred'        => $ir_occurred,
+        'ir_classification_level' => $ir_level,
     ] );
 
-    if ( is_wp_error( $post_id ) ) {
+    if ( 0 === $post_id ) {
         wp_send_json_error( [ 'message' => 'TRANSMISSION ERROR. PLEASE RETRY.' ] );
     }
-
-    // Save all five meta keys
-    update_post_meta( $post_id, 'ir_date_of_incident',    $ir_date );
-    update_post_meta( $post_id, 'ir_location',            $ir_location );
-    update_post_meta( $post_id, 'ir_subjects_present',    $ir_subjects );
-    update_post_meta( $post_id, 'ir_what_occurred',       $ir_occurred );
-    update_post_meta( $post_id, 'ir_classification_level', $ir_level );
 
     // Notification email to John
     $admin_email = get_option( 'area51_admin_email', get_option( 'admin_email' ) );

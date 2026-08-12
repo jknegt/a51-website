@@ -18,6 +18,27 @@
                 required
             />
         </div>
+        <div class="area51-form-row">
+            <label for="area51-name-input" class="area51-label">Name (optional)</label>
+            <input
+                type="text"
+                id="area51-name-input"
+                class="area51-input"
+                name="name"
+                placeholder="Your name"
+                autocomplete="name"
+            />
+        </div>
+        <div class="area51-form-row">
+            <label for="area51-memory-input" class="area51-label">A Comment From The Past (optional)</label>
+            <textarea
+                id="area51-memory-input"
+                class="area51-input"
+                name="memory"
+                rows="4"
+                placeholder="Got a memory from back then? Tell us — it'll be reviewed before it goes on the Memory Wall."
+            ></textarea>
+        </div>
         <div id="area51-subscribe-error" class="area51-form-error" style="display:none;" aria-live="polite"></div>
         <button type="submit" id="area51-subscribe-btn" class="area51-btn area51-btn-primary">
             SUBSCRIBE

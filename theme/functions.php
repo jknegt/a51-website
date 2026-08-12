@@ -315,11 +315,12 @@ function area51_enqueue_scripts(): void {
     // Version bumped to 2.9.5 to bust browser cache after reverting homepage email input resize/alignment.
     // Version bumped to 2.9.6 to bust browser cache after mobile site-title 2-line break.
     // Version bumped to 2.9.7 to bust browser cache after homepage section-spacing fix and footer 2-line break.
+    // Version bumped to 2.9.8 to bust browser cache after Layer 19 Subscribe-form input/textarea CSS parity fix.
     wp_enqueue_style(
         'area51-components',
         $theme_uri . '/css/area51-components.css',
         [],
-        '2.9.7'
+        '2.9.8'
     );
 
     // Skin decision locked in: "Gear / Signal" — was Layer 11's admin-only
@@ -339,11 +340,14 @@ function area51_enqueue_scripts(): void {
         true // load in footer
     );
 
+    // Version bumped to 1.0.1 to bust browser cache after Layer 19 added
+    // name/memory field reads and POST params (TEST-discovered: a cached
+    // pre-Layer-19 copy of this file silently drops the new fields on submit).
     wp_enqueue_script(
         'area51-subscribe',
         $theme_uri . '/js/subscribe.js',
         [],
-        '1.0.0',
+        '1.0.1',
         true // load in footer
     );
 
