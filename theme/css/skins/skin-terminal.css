@@ -27,49 +27,35 @@ body.skin-terminal .area51-footer::before {
     z-index: 0;
 }
 
-/* --- Sitewide: large rotating watermark fixed behind every page's content,
-   not just the homepage hero. Fixed to the viewport (not a section) so it
-   shows consistently regardless of how tall any given page is; z-index -1
-   keeps it beneath in-flow content and behind any element with its own
-   background (header, footer, cards), same as the original hero treatment.
+/* --- Sitewide: large watermark fixed to the viewport, vertically centered,
+   right-justified. No positional movement at all — the gear spins in place
+   and the figure holds still at its exact center.
 
-   Real markup (echoed via area51_render_watermark() on wp_footer, not a
-   pseudo-element) because the figure needs to be a CHILD of the rotating
-   pivot, not an independent sibling: .area51-watermark-pivot is the box
-   that actually carries the position/size/rotation animation; .area51-
-   watermark-gear (gear-ring-purple.png) has no transform of its own, so it
-   fully inherits the pivot's rotation and moves/spins exactly as before;
-   .area51-watermark-figure (figure-purple.png) gets an equal-and-opposite
-   counter-rotation, canceling the pivot's spin on its own orientation while
-   still inheriting every bit of the pivot's positional motion — it stays
-   locked to the gear's moving center without ever appearing to rotate
-   itself. Both PNGs were cut from the original combined gear-mark-
-   purple.png via connected-component separation (verified lossless).
-
-   Critical detail: the counter-rotation's transform-origin MUST target the
-   figure's own true visual center within its box (33.292% 46.5% — computed
-   from figure-purple.png's actual bounding box on its 800x1200 canvas under
-   background-size:contain with the default top-left background-position),
-   not the box's default 50% 50%. Canceling rotation around the box center
-   (same pivot the parent uses) is the identity transform — it cancels the
-   swing along with the spin, leaving the figure completely static. Only
-   canceling around its own off-center visual center lets the local
-   counter-spin undo just the orientation while the parent's rotation still
-   carries that (now-corrected) content through the same arc as the gear.
-   Verified empirically: diffing screenshots at 0deg vs 90deg showed 0
-   changed pixels before this fix, ~23000 after — and the figure's own
-   orientation stayed upright at both angles. --- */
+   Earlier attempts (background-position defaults + counter-rotation tricks)
+   fought the fact that the gear's own artwork wasn't centered within its
+   800x1200 source canvas, which made any rotation swing the visible content
+   in a circle around a pivot that didn't match its true center. Fixed at
+   the source instead: gear-ring-purple.png and figure-purple.png were
+   re-cropped to a square 620x620 canvas centered exactly on the gear
+   ring's own bounding-box center (computed from the original combined
+   gear-mark-purple.png). With the box's default rotation origin (50% 50%)
+   now coinciding with the gear's true visual center, rotating produces a
+   pure in-place spin with zero wobble — and since the figure shares that
+   same centered canvas but gets no animation at all, it simply stays put,
+   which is now exactly the gear's own center. Real markup (echoed via
+   area51_render_watermark() on wp_footer, not a pseudo-element) so the two
+   images can share one positioned box without duplicating position/size
+   rules. --- */
 body.skin-terminal .area51-watermark-pivot {
     position: fixed;
-    top: 10%;
-    left: 55%;
+    top: 50%;
+    right: 0;
     width: min(960px, 110vw);
     height: min(960px, 110vw);
     opacity: 0.28;
     pointer-events: none;
     z-index: -1;
-    transform: translateX(-50%);
-    animation: area51-gear-spin 140s linear infinite;
+    transform: translateY(-50%);
 }
 
 body.skin-terminal .area51-watermark-gear,
@@ -78,31 +64,25 @@ body.skin-terminal .area51-watermark-figure {
     inset: 0;
     background-size: contain;
     background-repeat: no-repeat;
+    background-position: center;
 }
 
 body.skin-terminal .area51-watermark-gear {
     background-image: url("../../images/skins/gear-ring-purple.png");
+    animation: area51-gear-spin 140s linear infinite;
 }
 
 body.skin-terminal .area51-watermark-figure {
     background-image: url("../../images/skins/figure-purple.png");
-    transform-origin: 33.292% 46.5%;
-    animation: area51-gear-counter-spin 140s linear infinite;
 }
 
 @keyframes area51-gear-spin {
-    from { transform: translateX(-50%) rotate(0deg); }
-    to   { transform: translateX(-50%) rotate(360deg); }
-}
-
-@keyframes area51-gear-counter-spin {
     from { transform: rotate(0deg); }
-    to   { transform: rotate(-360deg); }
+    to   { transform: rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    body.skin-terminal .area51-watermark-pivot,
-    body.skin-terminal .area51-watermark-figure {
+    body.skin-terminal .area51-watermark-gear {
         animation: none;
     }
 }
