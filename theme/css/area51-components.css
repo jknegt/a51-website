@@ -218,10 +218,20 @@ body {
    sole child of their own wrapper div, so :last-child above matches every
    one of them individually and wrongly strips their spacing. Restore it. */
 .area51-section.area51-countdown-section,
-.area51-section.area51-counter-section,
 .area51-section.area51-subscribe-section {
     margin-bottom: 2rem;
     padding-bottom: 2rem;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+/* Tighter than the generic section spacer above: the counter line itself
+   is short, so it doesn't need as much breathing room before/after its
+   divider — freeing this space keeps the Register button closer to the
+   fold on mobile, where the counter's 4 stacked segments already eat
+   a lot of vertical height. */
+.area51-section.area51-counter-section {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid #2a2a2a;
 }
 
