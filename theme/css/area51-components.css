@@ -228,7 +228,7 @@ body {
    counter section below — that margin is what sets the gap between this
    line and the counter text under it. */
 .area51-section.area51-countdown-section {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.35rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid #2a2a2a;
 }
@@ -239,8 +239,8 @@ body {
    fold on mobile, where the counter's 4 stacked segments already eat
    a lot of vertical height. */
 .area51-section.area51-counter-section {
-    margin-bottom: 1rem;
-    padding-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.2rem;
     border-bottom: 1px solid #2a2a2a;
 }
 
