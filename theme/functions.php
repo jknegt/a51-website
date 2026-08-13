@@ -175,6 +175,20 @@ function area51_skin_terminal_body_class( array $classes ): array {
     return $classes;
 }
 
+// Sitewide watermark markup — real DOM elements (not ::before/::after) so the
+// Vitruvian figure can be a CHILD of the rotating pivot and counter-rotate to
+// stay upright while still inheriting the pivot's positional motion. Styled
+// entirely in skin-terminal.css, scoped under body.skin-terminal there.
+add_action( 'wp_footer', 'area51_render_watermark' );
+function area51_render_watermark(): void {
+    ?>
+    <div class="area51-watermark-pivot" aria-hidden="true">
+        <div class="area51-watermark-gear"></div>
+        <div class="area51-watermark-figure"></div>
+    </div>
+    <?php
+}
+
 // Custom Post Types — Layer 02+ will register Missing Persons (classified_person) and
 // Clearance Requests (clearance_request) here. Stubs only at Layer 00.
 // function area51_register_post_types() { ... }
@@ -343,7 +357,7 @@ function area51_enqueue_scripts(): void {
         'area51-skin-terminal',
         $theme_uri . '/css/skins/skin-terminal.css',
         [ 'area51-components' ],
-        '1.0.13'
+        '1.0.14'
     );
 
     wp_enqueue_script(
