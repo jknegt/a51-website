@@ -159,6 +159,10 @@ body {
     .area51-title-break {
         display: inline;
     }
+
+    .area51-header {
+        padding: 1rem 1.25rem;
+    }
 }
 
 .area51-header .wp-block-site-title a:hover {
