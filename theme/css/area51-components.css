@@ -318,9 +318,30 @@ h2 {
 /* --- Counter section --- */
 .area51-counter-section {
     font-family: "Courier New", Courier, monospace;
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: #8a8a8a;
     letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.area51-counter-segment {
+    display: inline;
+}
+
+.area51-counter-sep {
+    display: inline;
+}
+
+@media (max-width: 640px) {
+    .area51-counter-section {
+        white-space: normal;
+    }
+    .area51-counter-segment {
+        display: block;
+    }
+    .area51-counter-sep {
+        display: none;
+    }
 }
 
 .area51-counter-value {

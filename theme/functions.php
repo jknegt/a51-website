@@ -199,7 +199,12 @@ function area51_register_shortcodes(): void {
 }
 
 function area51_counter_shortcode(): string {
-    return 'OCTOBER 2026 &mdash; Free Event &mdash; All Welcome &mdash; 19+';
+    $segments = [ 'OCTOBER 2026', 'Free Event', 'All Welcome', '19+' ];
+    $parts    = array_map(
+        static fn( string $segment ): string => '<span class="area51-counter-segment">' . esc_html( $segment ) . '</span>',
+        $segments
+    );
+    return implode( '<span class="area51-counter-sep">&nbsp;&mdash;&nbsp;</span>', $parts );
 }
 
 /**
@@ -317,11 +322,12 @@ function area51_enqueue_scripts(): void {
     // Version bumped to 2.9.8 to bust browser cache after Layer 19 Subscribe-form input/textarea CSS parity fix.
     // Version bumped to 2.9.9 to bust browser cache after Subscribe form row spacing fix.
     // Version bumped to 2.10.0 to bust browser cache after doubling the counter-section font size.
+    // Version bumped to 2.10.1 to bust browser cache after counter-section responsive single-line/stacked fix.
     wp_enqueue_style(
         'area51-components',
         $theme_uri . '/css/area51-components.css',
         [],
-        '2.10.0'
+        '2.10.1'
     );
 
     // Skin decision locked in: "Gear / Signal" — was Layer 11's admin-only
