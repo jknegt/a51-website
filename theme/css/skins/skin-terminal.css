@@ -45,13 +45,20 @@ body.skin-terminal .area51-footer::before {
    which is now exactly the gear's own center. Real markup (echoed via
    area51_render_watermark() on wp_footer, not a pseudo-element) so the two
    images can share one positioned box without duplicating position/size
-   rules. --- */
+   rules.
+
+   Box size 496px/56.8vw (not 960px/110vw) is deliberate: the tightly
+   cropped 620x620 canvas has far less transparent padding than the old
+   800x1200 one, so the same box size would render the artwork ~1.9x
+   larger. This value restores the original on-screen size (gear bbox
+   height was 582/1200=48.5% of the box before, is 582/620=93.9% now;
+   960 * (48.5/93.9) = 496). --- */
 body.skin-terminal .area51-watermark-pivot {
     position: fixed;
     top: 50%;
     right: 0;
-    width: min(960px, 110vw);
-    height: min(960px, 110vw);
+    width: min(496px, 56.8vw);
+    height: min(496px, 56.8vw);
     opacity: 0.28;
     pointer-events: none;
     z-index: -1;
