@@ -31,22 +31,37 @@ body.skin-terminal .area51-footer::before {
    not just the homepage hero. Fixed to the viewport (not a section) so it
    shows consistently regardless of how tall any given page is; z-index -1
    keeps it beneath in-flow content and behind any element with its own
-   background (header, footer, cards), same as the original hero treatment. --- */
-body.skin-terminal::before {
+   background (header, footer, cards), same as the original hero treatment.
+   Split into two layers sharing identical position/size: ::before is the
+   gear ring only (gear-ring-purple.png) and rotates; ::after is the
+   Vitruvian figure only (figure-purple.png), stays co-located with the
+   gear but does not rotate. Both PNGs were cut from the original combined
+   gear-mark-purple.png via connected-component separation (the two shapes
+   share no touching pixels in the source alpha mask), so their coordinates
+   line up exactly with no separate offset needed. --- */
+body.skin-terminal::before,
+body.skin-terminal::after {
     content: "";
     position: fixed;
     top: 10%;
     left: 55%;
     width: min(960px, 110vw);
     height: min(960px, 110vw);
-    background-image: url("../../images/skins/gear-mark-purple.png");
     background-size: contain;
     background-repeat: no-repeat;
     opacity: 0.28;
     pointer-events: none;
     z-index: -1;
     transform: translateX(-50%);
+}
+
+body.skin-terminal::before {
+    background-image: url("../../images/skins/gear-ring-purple.png");
     animation: area51-gear-spin 140s linear infinite;
+}
+
+body.skin-terminal::after {
+    background-image: url("../../images/skins/figure-purple.png");
 }
 
 @keyframes area51-gear-spin {
