@@ -199,7 +199,7 @@ function area51_register_shortcodes(): void {
 }
 
 function area51_counter_shortcode(): string {
-    $segments = [ 'OCTOBER 2026', 'Free Event', 'All Welcome', '19+' ];
+    $segments = [ 'OCTOBER 2026', 'Free Party', 'All Welcome', '19+' ];
     $parts    = array_map(
         static fn( string $segment ): string => '<span class="area51-counter-segment">' . esc_html( $segment ) . '</span>',
         $segments
