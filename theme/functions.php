@@ -327,11 +327,12 @@ function area51_enqueue_scripts(): void {
     // Version bumped to 2.10.3 to bust browser cache after tightening space above/below the counter line further.
     // Version bumped to 2.10.4 to bust browser cache after doubling the nav item font size.
     // Version bumped to 2.10.5 to bust browser cache after tightening counter-line spacing once more.
+    // Version bumped to 2.10.6 to bust browser cache after adding the History page's register-cta style.
     wp_enqueue_style(
         'area51-components',
         $theme_uri . '/css/area51-components.css',
         [],
-        '2.10.5'
+        '2.10.6'
     );
 
     // Skin decision locked in: "Gear / Signal" — was Layer 11's admin-only
