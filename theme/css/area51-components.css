@@ -217,9 +217,18 @@ body {
 /* Homepage sections rendered via template-part blocks each end up as the
    sole child of their own wrapper div, so :last-child above matches every
    one of them individually and wrongly strips their spacing. Restore it. */
-.area51-section.area51-countdown-section,
 .area51-section.area51-subscribe-section {
     margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+/* Countdown keeps its own padding-bottom/border (space between the timer
+   and the line below it), but its margin-bottom is tightened to match the
+   counter section below — that margin is what sets the gap between this
+   line and the counter text under it. */
+.area51-section.area51-countdown-section {
+    margin-bottom: 0.75rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid #2a2a2a;
 }
@@ -231,7 +240,7 @@ body {
    a lot of vertical height. */
 .area51-section.area51-counter-section {
     margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
+    padding-bottom: 0.4rem;
     border-bottom: 1px solid #2a2a2a;
 }
 
