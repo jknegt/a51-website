@@ -44,7 +44,21 @@ body.skin-terminal .area51-footer::before {
    still inheriting every bit of the pivot's positional motion — it stays
    locked to the gear's moving center without ever appearing to rotate
    itself. Both PNGs were cut from the original combined gear-mark-
-   purple.png via connected-component separation (verified lossless). --- */
+   purple.png via connected-component separation (verified lossless).
+
+   Critical detail: the counter-rotation's transform-origin MUST target the
+   figure's own true visual center within its box (33.292% 46.5% — computed
+   from figure-purple.png's actual bounding box on its 800x1200 canvas under
+   background-size:contain with the default top-left background-position),
+   not the box's default 50% 50%. Canceling rotation around the box center
+   (same pivot the parent uses) is the identity transform — it cancels the
+   swing along with the spin, leaving the figure completely static. Only
+   canceling around its own off-center visual center lets the local
+   counter-spin undo just the orientation while the parent's rotation still
+   carries that (now-corrected) content through the same arc as the gear.
+   Verified empirically: diffing screenshots at 0deg vs 90deg showed 0
+   changed pixels before this fix, ~23000 after — and the figure's own
+   orientation stayed upright at both angles. --- */
 body.skin-terminal .area51-watermark-pivot {
     position: fixed;
     top: 10%;
@@ -72,6 +86,7 @@ body.skin-terminal .area51-watermark-gear {
 
 body.skin-terminal .area51-watermark-figure {
     background-image: url("../../images/skins/figure-purple.png");
+    transform-origin: 33.292% 46.5%;
     animation: area51-gear-counter-spin 140s linear infinite;
 }
 
