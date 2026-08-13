@@ -691,6 +691,15 @@ h2 {
     font-size: 1.15rem;
 }
 
+/* History page: "The concept:" line with its 3 points indented beneath it */
+.area51-concept-block p {
+    margin: 0 0 1rem 0;
+}
+.area51-concept-block p.area51-concept-list {
+    margin-left: 2rem;
+    line-height: 1.6;
+}
+
 /* Case file header block (static document chrome) */
 .dossier-case-header {
     background: var(--wp--preset--color--manila, #f5e6c8);
