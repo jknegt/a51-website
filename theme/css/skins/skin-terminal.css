@@ -36,7 +36,7 @@ body.skin-terminal::before {
     content: "";
     position: fixed;
     top: 10%;
-    right: 0;
+    left: 55%;
     width: min(960px, 110vw);
     height: min(960px, 110vw);
     background-image: url("../../images/skins/gear-mark-purple.png");
@@ -45,12 +45,13 @@ body.skin-terminal::before {
     opacity: 0.28;
     pointer-events: none;
     z-index: -1;
+    transform: translateX(-50%);
     animation: area51-gear-spin 140s linear infinite;
 }
 
 @keyframes area51-gear-spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
+    from { transform: translateX(-50%) rotate(0deg); }
+    to   { transform: translateX(-50%) rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
