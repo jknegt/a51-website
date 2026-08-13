@@ -27,9 +27,11 @@ body.skin-terminal .area51-footer::before {
     z-index: 0;
 }
 
-/* --- Sitewide: large watermark fixed to the viewport, vertically centered,
-   right-justified. No positional movement at all — the gear spins in place
-   and the figure holds still at its exact center.
+/* --- Sitewide: large watermark fixed to the viewport, right-justified,
+   shifted up half its own height from vertical center (top:50% +
+   translateY(-100%), instead of the centering -50%). No positional
+   movement at all — the gear spins in place and the figure holds still
+   at its exact center.
 
    Earlier attempts (background-position defaults + counter-rotation tricks)
    fought the fact that the gear's own artwork wasn't centered within its
@@ -62,7 +64,7 @@ body.skin-terminal .area51-watermark-pivot {
     opacity: 0.28;
     pointer-events: none;
     z-index: -1;
-    transform: translateY(-50%);
+    transform: translateY(-100%);
 }
 
 body.skin-terminal .area51-watermark-gear,

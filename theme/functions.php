@@ -357,7 +357,7 @@ function area51_enqueue_scripts(): void {
         'area51-skin-terminal',
         $theme_uri . '/css/skins/skin-terminal.css',
         [ 'area51-components' ],
-        '1.0.17'
+        '1.0.18'
     );
 
     wp_enqueue_script(
