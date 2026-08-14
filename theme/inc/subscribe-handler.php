@@ -114,12 +114,18 @@ function area51_handle_subscribe(): void {
 
     // Layer 19: create a pending incident_report only when a memory was given —
     // same email-first-atomicity position as the area51_upsert_contact() call
-    // above (i.e. only after wp_mail() has already succeeded).
+    // above (i.e. only after wp_mail() has already succeeded). Also notifies
+    // John the same way the dedicated Memory Wall form does — previously this
+    // path created the pending post silently, with no notification at all.
     if ( '' !== $memory ) {
-        area51_create_incident_report_post( [
+        $ir_fields = [
             'ir_what_occurred'        => $memory,
             'ir_source_contact_email' => $email,
-        ] );
+        ];
+        $ir_post_id = area51_create_incident_report_post( $ir_fields );
+        if ( $ir_post_id ) {
+            area51_notify_admin_new_incident_report( $ir_post_id, $ir_fields );
+        }
     }
 
     // Add to Kit (secondary — failure does not block success response)

@@ -100,13 +100,22 @@ function area51_incident_report_meta_box(): void {
 function area51_incident_report_meta_box_callback( WP_Post $post ): void {
     wp_nonce_field( 'area51_incident_report_meta', 'area51_incident_report_meta_nonce' );
 
-    $date     = get_post_meta( $post->ID, 'ir_date_of_incident',    true );
-    $location = get_post_meta( $post->ID, 'ir_location',            true );
-    $subjects = get_post_meta( $post->ID, 'ir_subjects_present',    true );
-    $occurred = get_post_meta( $post->ID, 'ir_what_occurred',       true );
-    $level    = get_post_meta( $post->ID, 'ir_classification_level', true );
+    $date         = get_post_meta( $post->ID, 'ir_date_of_incident',     true );
+    $location     = get_post_meta( $post->ID, 'ir_location',             true );
+    $subjects     = get_post_meta( $post->ID, 'ir_subjects_present',     true );
+    $occurred     = get_post_meta( $post->ID, 'ir_what_occurred',        true );
+    $level        = get_post_meta( $post->ID, 'ir_classification_level', true );
+    $source_email = get_post_meta( $post->ID, 'ir_source_contact_email', true );
     ?>
     <table class="form-table">
+        <tr>
+            <th><label for="ir_source_contact_email">Source Email</label></th>
+            <td>
+                <input type="email" id="ir_source_contact_email" name="ir_source_contact_email"
+                       value="<?php echo esc_attr( $source_email ); ?>" class="regular-text">
+                <p class="description">Populated automatically when submitted via the homepage Register form's Comment field. Empty for direct Memory Wall submissions.</p>
+            </td>
+        </tr>
         <tr>
             <th><label for="ir_date_of_incident">Date of Incident</label></th>
             <td>
@@ -183,7 +192,10 @@ function area51_save_incident_report_meta( int $post_id ): void {
     // Capability check
     if ( ! current_user_can( 'edit_post', $post_id ) ) return;
 
-    // Save all five ir_* keys
+    // Save all six ir_* keys
+    if ( isset( $_POST['ir_source_contact_email'] ) ) {
+        update_post_meta( $post_id, 'ir_source_contact_email', sanitize_email( $_POST['ir_source_contact_email'] ) );
+    }
     if ( isset( $_POST['ir_date_of_incident'] ) ) {
         update_post_meta( $post_id, 'ir_date_of_incident', sanitize_text_field( $_POST['ir_date_of_incident'] ) );
     }
@@ -208,10 +220,11 @@ function area51_save_incident_report_meta( int $post_id ): void {
 add_filter( 'manage_incident_report_posts_columns', 'area51_ir_columns' );
 function area51_ir_columns( array $columns ): array {
     unset( $columns['date'] );
-    $columns['ir_classification_level'] = 'Classification';
-    $columns['ir_location']             = 'Location';
-    $columns['ir_date_of_incident']     = 'Date of Incident';
-    $columns['date']                    = 'Submission Date';
+    $columns['ir_classification_level']   = 'Classification';
+    $columns['ir_source_contact_email']   = 'Source Email';
+    $columns['ir_location']               = 'Location';
+    $columns['ir_date_of_incident']       = 'Date of Incident';
+    $columns['date']                      = 'Submission Date';
     return $columns;
 }
 
@@ -220,6 +233,9 @@ function area51_ir_column_content( string $column, int $post_id ): void {
     switch ( $column ) {
         case 'ir_classification_level':
             echo esc_html( get_post_meta( $post_id, 'ir_classification_level', true ) ?: '—' );
+            break;
+        case 'ir_source_contact_email':
+            echo esc_html( get_post_meta( $post_id, 'ir_source_contact_email', true ) ?: '—' );
             break;
         case 'ir_location':
             echo esc_html( get_post_meta( $post_id, 'ir_location', true ) ?: '—' );
@@ -441,6 +457,54 @@ function area51_create_incident_report_post( array $fields ): int {
     return (int) $post_id;
 }
 
+/**
+ * Send the "new incident report" admin notification email. Shared by the
+ * Memory Wall AJAX handler and the Subscribe/Register AJAX handler so both
+ * submission paths notify John the same way — previously only the dedicated
+ * Memory Wall form did this; a Comment left via Register created a pending
+ * post with no notification at all. Failure is logged, never surfaced to
+ * the submitter and never blocks the caller's own success response.
+ *
+ * @param int   $post_id The created incident_report post ID.
+ * @param array $fields  Same recognized keys as area51_create_incident_report_post().
+ */
+function area51_notify_admin_new_incident_report( int $post_id, array $fields ): void {
+    $ir_date      = $fields['ir_date_of_incident']     ?? '';
+    $ir_location  = $fields['ir_location']             ?? '';
+    $ir_subjects  = $fields['ir_subjects_present']     ?? '';
+    $ir_occurred  = $fields['ir_what_occurred']        ?? '';
+    $ir_level     = $fields['ir_classification_level'] ?: 'UNCLASSIFIED';
+    $ir_src_email = $fields['ir_source_contact_email'] ?? '';
+
+    $admin_email = get_option( 'area51_admin_email', get_option( 'admin_email' ) );
+    $resend      = get_option( 'resend_settings' );
+    $from_email  = is_array( $resend ) ? ( $resend['from_email'] ?? 'noreply@area51reunion.com' ) : 'noreply@area51reunion.com';
+    $from_name   = is_array( $resend ) ? ( $resend['from_name']  ?? 'Area 51 Reunion' )           : 'Area 51 Reunion';
+    $headers     = [
+        'Content-Type: text/html; charset=UTF-8',
+        "From: {$from_name} <{$from_email}>",
+    ];
+    $subject = 'NEW INCIDENT REPORT FILED — AWAITING YOUR CLASSIFICATION';
+    $body    = '';
+    if ( $ir_src_email ) {
+        $body .= '<p><strong>Source Email:</strong> ' . esc_html( $ir_src_email ) . '</p>';
+    }
+    $body .= '<p><strong>Date of Incident:</strong> ' . esc_html( $ir_date )     . '</p>';
+    $body .= '<p><strong>Location:</strong> '          . esc_html( $ir_location ) . '</p>';
+    $body .= '<p><strong>Subjects Present:</strong> '  . esc_html( $ir_subjects ) . '</p>';
+    $body .= '<p><strong>What Occurred:</strong></p><p>' . nl2br( esc_html( $ir_occurred ) ) . '</p>';
+    $body .= '<p><strong>Classification Level (submitted):</strong> ' . esc_html( $ir_level ) . '</p>';
+    $body .= '<p><a href="' . esc_url( admin_url( "post.php?post={$post_id}&action=edit" ) ) . '">Review in WP Admin</a></p>';
+
+    try {
+        wp_mail( $admin_email, $subject, $body, $headers );
+    } catch ( \Throwable $e ) {
+        // Notification failure must NOT block the caller's own success response
+        // [Prevention: ISSUE-008 pattern] — Resend plugin exceptions caught here
+        error_log( 'area51_notify_admin_new_incident_report: wp_mail exception: ' . $e->getMessage() );
+    }
+}
+
 // ===========================================================================
 // 2h. AJAX Handler
 // ===========================================================================
@@ -463,44 +527,23 @@ function area51_submit_incident_report(): void {
         wp_send_json_error( [ 'message' => 'WHAT OCCURRED field is required.' ] );
     }
 
-    // Insert via shared helper (Layer 19) — CRITICAL: post_status is hardcoded
-    // 'pending' inside the helper, never 'draft' or 'publish', not overridable here.
-    $post_id = area51_create_incident_report_post( [
+    $fields = [
         'ir_date_of_incident'     => $ir_date,
         'ir_location'             => $ir_location,
         'ir_subjects_present'     => $ir_subjects,
         'ir_what_occurred'        => $ir_occurred,
         'ir_classification_level' => $ir_level,
-    ] );
+    ];
+
+    // Insert via shared helper (Layer 19) — CRITICAL: post_status is hardcoded
+    // 'pending' inside the helper, never 'draft' or 'publish', not overridable here.
+    $post_id = area51_create_incident_report_post( $fields );
 
     if ( 0 === $post_id ) {
         wp_send_json_error( [ 'message' => 'TRANSMISSION ERROR. PLEASE RETRY.' ] );
     }
 
-    // Notification email to John
-    $admin_email = get_option( 'area51_admin_email', get_option( 'admin_email' ) );
-    $resend      = get_option( 'resend_settings' );
-    $from_email  = is_array( $resend ) ? ( $resend['from_email'] ?? 'noreply@area51reunion.com' ) : 'noreply@area51reunion.com';
-    $from_name   = is_array( $resend ) ? ( $resend['from_name']  ?? 'Area 51 Reunion' )           : 'Area 51 Reunion';
-    $headers     = [
-        'Content-Type: text/html; charset=UTF-8',
-        "From: {$from_name} <{$from_email}>",
-    ];
-    $subject = 'NEW INCIDENT REPORT FILED — AWAITING YOUR CLASSIFICATION';
-    $body    = '<p><strong>Date of Incident:</strong> ' . esc_html( $ir_date )     . '</p>';
-    $body   .= '<p><strong>Location:</strong> '          . esc_html( $ir_location ) . '</p>';
-    $body   .= '<p><strong>Subjects Present:</strong> '  . esc_html( $ir_subjects ) . '</p>';
-    $body   .= '<p><strong>What Occurred:</strong></p><p>' . nl2br( esc_html( $ir_occurred ) ) . '</p>';
-    $body   .= '<p><strong>Classification Level (submitted):</strong> ' . esc_html( $ir_level ) . '</p>';
-    $body   .= '<p><a href="' . esc_url( admin_url( "post.php?post={$post_id}&action=edit" ) ) . '">Review in WP Admin</a></p>';
-
-    try {
-        wp_mail( $admin_email, $subject, $body, $headers );
-    } catch ( \Throwable $e ) {
-        // Notification failure must NOT block the success response
-        // [Prevention: ISSUE-008 pattern] — Resend plugin exceptions caught here
-        error_log( 'area51_submit_incident_report: wp_mail exception: ' . $e->getMessage() );
-    }
+    area51_notify_admin_new_incident_report( $post_id, $fields );
 
     wp_send_json_success( [ 'message' => 'INCIDENT REPORT FILED — AWAITING CLASSIFICATION' ] );
 }
