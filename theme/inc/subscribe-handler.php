@@ -84,7 +84,7 @@ function area51_handle_subscribe(): void {
         "From: {$from_name} <{$from_email}>",
     ];
     $subject = 'Area 51 — 30 Year Reunion. One Night Only. Halloween.';
-    $body    = "It's been a long time — before smartphones, before the internet took over. This Halloween, for one night only, we're back from the dead — and we would love to see you again (or meet you for the first time) to fill your ears, move your feet and feed your head!\n\nWe won't flood your inbox. You'll hear from us only when the site has something new or when the party date and venue are declassified.\n\n— Area 51\n  (Sandro, John, Dan)";
+    $body    = "It's been a long time — before smartphones, before the internet took over. This Halloween, for one night only, we're back from the dead — and we would love to see you again (or meet you for the first time) to fill your ears, move your feet and feed your head!\n\nWe won't flood your inbox. You'll hear from us only when the site has something new or when the party date and venue are declassified.\n\n— Area 51\n  (John, Sandro, Dan)";
 
     // Layer 19: personalize the greeting when a name was given. $subject stays
     // unchanged in both branches; $body stays byte-identical to the pre-Layer-19
