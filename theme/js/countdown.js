@@ -1,6 +1,6 @@
 /**
  * Area 51 Reunion — Countdown Timer
- * Target: October 31, 2026, 22:00 EDT (UTC-4)
+ * Target: Thursday, October 29, 2026, 22:00 EDT (UTC-4)
  * TODO: John to confirm event start time — currently set to 22:00 EDT (10pm)
  * Vatican Gift Shop, 587 King St W, Toronto
  */
@@ -8,7 +8,7 @@
     'use strict';
 
     // TODO: John to confirm event start time — currently set to 22:00 EDT (10pm)
-    var TARGET = new Date('2026-10-31T22:00:00-04:00');
+    var TARGET = new Date('2026-10-29T22:00:00-04:00');
 
     function pad(n) {
         return String(n).padStart(2, '0');

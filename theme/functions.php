@@ -364,7 +364,7 @@ function area51_enqueue_scripts(): void {
         'area51-countdown',
         $theme_uri . '/js/countdown.js',
         [],
-        '1.0.0',
+        '1.0.1', // bumped: countdown target moved to Oct 29, 2026
         true // load in footer
     );
 
